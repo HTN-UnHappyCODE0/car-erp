@@ -36,7 +36,6 @@ bin/
 *.dylib
 *.test
 *.out
-server
 
 # Logs
 *.log
