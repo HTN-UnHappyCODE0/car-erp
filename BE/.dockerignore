@@ -1,0 +1,11 @@
+.git
+.gitignore
+*.exe
+*.test
+*.out
+*.log
+bin/
+server
+.env
+.env.*
+!.env.example
