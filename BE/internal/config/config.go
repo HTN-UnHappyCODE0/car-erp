@@ -48,10 +48,12 @@ func LoadConfig() *Config {
 	}
 
 	// Đọc danh sách domain CORS được phép
-	corsOriginsRaw := getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+	defaultCors := "http://localhost:3000,http://127.0.0.1:3000,https://carerp.namhoanglegal.com,https://api-carerp.namhoanglegal.com"
+	corsOriginsRaw := getEnv("CORS_ALLOWED_ORIGINS", defaultCors)
 	var corsOrigins []string
 	for _, origin := range strings.Split(corsOriginsRaw, ",") {
 		trimmed := strings.TrimSpace(origin)
+		trimmed = strings.TrimRight(trimmed, "/")
 		if trimmed != "" {
 			corsOrigins = append(corsOrigins, trimmed)
 		}

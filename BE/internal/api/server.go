@@ -119,7 +119,15 @@ func (server *Server) setupRouter() {
 	invoiceHandler := handler.NewInvoiceHandler(server.store)
 	repairOrderHandler := handler.NewRepairOrderHandler(server.store)
 
-	// 3. API V1 Routes
+	// 3. API Routes
+	// Root Aliases for Auth (Hỗ trợ cả trường hợp client gọi trực tiếp /auth/*)
+	rootAuth := server.router.Group("/auth")
+	{
+		rootAuth.POST("/login", authHandler.Login)
+		rootAuth.POST("/renew", authHandler.RenewAccessToken)
+	}
+
+	// API V1 Routes
 	v1 := server.router.Group("/api/v1")
 	{
 		// Public Auth Routes

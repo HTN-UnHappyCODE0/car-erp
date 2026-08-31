@@ -1,4 +1,13 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+const getApiBaseUrl = (): string => {
+  const raw = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+  const clean = raw.trim().replace(/\/+$/, '');
+  if (clean.endsWith('/api/v1')) {
+    return clean;
+  }
+  return `${clean}/api/v1`;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 export const STORAGE_KEYS = {
   UI_PREFERENCES: 'car-erp-ui-storage',

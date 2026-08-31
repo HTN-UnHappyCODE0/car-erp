@@ -15,19 +15,34 @@ func CORSMiddleware(allowedOrigins []string) gin.HandlerFunc {
 
 	for _, o := range allowedOrigins {
 		trimmed := strings.TrimSpace(o)
+		trimmed = strings.TrimRight(trimmed, "/")
 		if trimmed == "*" {
 			allowAll = true
 		}
-		originMap[trimmed] = true
+		if trimmed != "" {
+			originMap[trimmed] = true
+		}
 	}
 
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
+		cleanOrigin := strings.TrimRight(strings.TrimSpace(origin), "/")
 
 		isAllowed := false
-		if origin != "" {
-			if allowAll || originMap[origin] {
+		if cleanOrigin != "" {
+			if allowAll || originMap[cleanOrigin] {
 				isAllowed = true
+			} else {
+				// Hỗ trợ kiểm tra wildcard subdomains như *.namhoanglegal.com
+				for allowed := range originMap {
+					if strings.HasPrefix(allowed, "*.") {
+						suffix := allowed[1:]
+						if strings.HasSuffix(cleanOrigin, suffix) {
+							isAllowed = true
+							break
+						}
+					}
+				}
 			}
 		}
 
