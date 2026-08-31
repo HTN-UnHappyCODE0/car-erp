@@ -1,12 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useUIStore } from '@/shared/store/ui-store';
 import { useAuthStore } from '@/shared/store/auth-store';
 import { NAVIGATION_ITEMS, NavItem, UserRole } from '@/shared/config/navigation';
 import { cn } from '@/shared/lib/utils';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/shared/components/ui/alert-dialog';
 import {
   LayoutDashboard,
   Car,
@@ -37,8 +47,15 @@ interface SidebarContentProps {
 
 export function SidebarNavContent({ isMobile = false, onItemClick }: SidebarContentProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { sidebarCollapsed } = useUIStore();
   const { user, logout } = useAuthStore();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const handleLogoutConfirm = () => {
+    logout();
+    router.push('/login');
+  };
 
   const userRole = (user?.role || 'superadmin') as UserRole;
   const isCollapsed = !isMobile && sidebarCollapsed;
@@ -182,9 +199,9 @@ export function SidebarNavContent({ isMobile = false, onItemClick }: SidebarCont
 
         {/* Logout button */}
         <button
-          onClick={logout}
+          onClick={() => setShowLogoutDialog(true)}
           className={cn(
-            'flex w-full items-center gap-2.5 rounded-full px-3.5 py-2 text-[12px] font-medium text-[#828282] hover:text-[#202020] hover:bg-[#efefef] transition-all',
+            'flex w-full items-center gap-2.5 rounded-full px-3.5 py-2 text-[12px] font-medium text-[#828282] hover:text-red-500 hover:bg-red-50 transition-all',
             isCollapsed && !isMobile && 'justify-center px-2'
           )}
         >
@@ -192,6 +209,27 @@ export function SidebarNavContent({ isMobile = false, onItemClick }: SidebarCont
           {(!isCollapsed || isMobile) && <span>Đăng xuất</span>}
         </button>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không? Phiên làm việc hiện tại sẽ kết thúc.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLogoutConfirm}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Đăng xuất
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -21,6 +21,16 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/shared/components/ui/avatar';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/shared/components/ui/alert-dialog';
+import {
   Building2,
   Search,
   LogOut,
@@ -62,7 +72,9 @@ export function AppHeader() {
     queryClient.invalidateQueries();
   };
 
-  const handleLogout = () => {
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const handleLogoutConfirm = () => {
     logout();
     queryClient.clear();
     router.push('/login');
@@ -251,7 +263,7 @@ export function AppHeader() {
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-[#e8e8e8]" />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={() => setShowLogoutDialog(true)}
               className="text-xs text-rose-600 focus:text-rose-600 cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-rose-50"
             >
               <LogOut className="h-4 w-4" />
@@ -261,5 +273,25 @@ export function AppHeader() {
         </DropdownMenu>
       </div>
     </header>
+
+    <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
+          <AlertDialogDescription>
+            Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không? Phiên làm việc hiện tại sẽ kết thúc.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleLogoutConfirm}
+            className="bg-red-500 hover:bg-red-600 text-white"
+          >
+            Đăng xuất
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
