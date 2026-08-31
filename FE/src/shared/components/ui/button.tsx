@@ -5,31 +5,37 @@ import { cn } from '@/shared/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff682c] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none',
   {
     variants: {
       variant: {
         default:
-          'bg-blue-600 text-white shadow hover:bg-blue-700 hover:shadow-md',
+          'bg-[#202020] text-white shadow-sm hover:bg-[#333333] hover:shadow',
         brand:
-          'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg',
+          'bg-[#202020] text-white shadow-sm hover:bg-[#333333] border border-[#333333]',
+        ember:
+          'bg-[#ff682c] text-white shadow-sm hover:bg-[#e5561e] hover:shadow-md',
         destructive:
           'bg-rose-600 text-white shadow-sm hover:bg-rose-700',
         outline:
-          'border border-slate-200 bg-transparent hover:bg-slate-100 hover:text-slate-900',
+          'border border-[#e8e8e8] bg-white text-[#202020] hover:bg-[#efefef] hover:border-[#828282]/30',
         secondary:
-          'bg-slate-100 text-slate-900 shadow-sm hover:bg-slate-200',
+          'bg-[#efefef] text-[#202020] hover:bg-[#e8e8e8]',
         ghost:
-          'hover:bg-slate-100 hover:text-slate-900',
-        link: 'text-blue-600 underline-offset-4 hover:underline',
+          'hover:bg-[#efefef] text-[#202020]',
+        link: 'text-[#ff682c] underline-offset-4 hover:underline font-medium',
         success:
-          'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',
+          'bg-emerald-700 text-white shadow-sm hover:bg-emerald-800',
+        ivory:
+          'bg-[#ebe6dd] text-[#202020] hover:bg-[#dfd9ce] border border-[#d8d1c4]',
       },
       size: {
         default: 'h-9 px-4 py-2',
-        sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-11 rounded-lg px-6 text-base',
-        icon: 'h-9 w-9 p-0',
+        sm: 'h-8 rounded-lg px-3 text-xs',
+        lg: 'h-11 rounded-xl px-6 text-base',
+        pill: 'h-9 rounded-full px-5 py-2',
+        icon: 'h-9 w-9 p-0 rounded-lg',
+        'icon-pill': 'h-9 w-9 p-0 rounded-full',
       },
     },
     defaultVariants: {

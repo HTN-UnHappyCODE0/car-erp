@@ -73,11 +73,11 @@ export function FinanceView() {
       accessorKey: 'invoice_number',
       cell: (row) => (
         <div>
-          <span className="font-mono text-xs font-bold text-indigo-500">
+          <span className="font-mono text-xs font-bold text-[#202020]">
             {row.invoice_number}
           </span>
-          <div className="text-[11px] text-muted-foreground font-medium mt-0.5 flex items-center gap-1 font-mono">
-            <Building2 className="h-3 w-3 text-muted-foreground/60" />
+          <div className="text-[11px] text-[#828282] font-medium mt-0.5 flex items-center gap-1 font-mono">
+            <Building2 className="h-3 w-3 text-[#828282]" />
             {row.order_id
               ? `Bán xe #${row.order_id.slice(0, 8)}`
               : row.repair_order_id
@@ -95,7 +95,7 @@ export function FinanceView() {
           row.status === 'PAID'
             ? 'success'
             : row.status === 'PARTIAL'
-            ? 'warning'
+            ? 'ember'
             : row.status === 'OVERDUE'
             ? 'destructive'
             : 'secondary';
@@ -111,7 +111,7 @@ export function FinanceView() {
       header: 'Tổng Giá Trị',
       accessorKey: 'amount',
       cell: (row) => (
-        <span className="text-xs font-bold text-foreground font-mono">
+        <span className="text-xs font-bold text-[#202020] font-mono">
           {formatVND(row.amount)}
         </span>
       ),
@@ -135,7 +135,7 @@ export function FinanceView() {
     {
       header: 'Hạn Thanh Toán',
       accessorKey: 'due_date',
-      cell: (row) => <span className="text-xs text-muted-foreground font-mono">{formatDate(row.due_date)}</span>,
+      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.due_date)}</span>,
     },
     {
       header: 'Thao Tác Kế Toán',
@@ -144,7 +144,7 @@ export function FinanceView() {
           <Button
             variant="outline"
             size="sm"
-            className="h-7 text-xs rounded-lg text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/10 font-semibold"
+            className="h-7 text-xs rounded-full border-emerald-300 text-emerald-800 hover:bg-emerald-50 font-semibold"
             onClick={() => handleOpenPayment(row)}
             disabled={row.status === 'PAID'}
           >
@@ -155,7 +155,7 @@ export function FinanceView() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+            className="h-7 w-7 p-0 rounded-full text-[#828282] hover:text-[#202020] hover:bg-[#efefef]"
             onClick={() => handleOpenDetail(row)}
             title="Xem chi tiết & Timeline giao dịch"
           >
@@ -172,10 +172,10 @@ export function FinanceView() {
       accessorKey: 'reference_code',
       cell: (row) => (
         <div>
-          <span className="font-mono text-xs font-bold text-indigo-500">
+          <span className="font-mono text-xs font-bold text-[#202020]">
             {row.reference_code || `#${row.id.slice(0, 8)}`}
           </span>
-          <div className="text-[10px] font-mono text-muted-foreground">ID: {row.id.slice(0, 8)}</div>
+          <div className="text-[10px] font-mono text-[#828282]">ID: {row.id.slice(0, 8)}</div>
         </div>
       ),
     },
@@ -183,7 +183,7 @@ export function FinanceView() {
       header: 'Phương Thức',
       accessorKey: 'payment_method',
       cell: (row) => (
-        <Badge variant="outline" className="text-[10px] font-semibold border-border/60">
+        <Badge variant="outline" className="text-[10px] font-semibold border-[#e8e8e8] text-[#202020]">
           {row.payment_method}
         </Badge>
       ),
@@ -192,7 +192,7 @@ export function FinanceView() {
       header: 'Số Tiền Thực Thu',
       accessorKey: 'amount',
       cell: (row) => (
-        <span className="text-xs font-black text-emerald-500 font-mono">
+        <span className="text-xs font-bold text-emerald-700 font-mono">
           +{formatVND(row.amount)}
         </span>
       ),
@@ -201,14 +201,14 @@ export function FinanceView() {
       header: 'Thời Gian Giao Dịch',
       accessorKey: 'transaction_date',
       cell: (row) => (
-        <span className="text-xs text-muted-foreground font-mono">{formatDateTime(row.transaction_date)}</span>
+        <span className="text-xs text-[#828282] font-mono">{formatDateTime(row.transaction_date)}</span>
       ),
     },
     {
       header: 'Ghi Chú Kế Toán',
       accessorKey: 'note',
       cell: (row) => (
-        <span className="text-xs text-muted-foreground max-w-[200px] truncate block">
+        <span className="text-xs text-[#828282] max-w-[200px] truncate block">
           {row.note || '-'}
         </span>
       ),
@@ -219,100 +219,100 @@ export function FinanceView() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-500">
+        <h2 className="text-2xl font-heading font-bold tracking-tight text-[#202020] flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#202020] text-white">
             <Receipt className="h-4.5 w-4.5" />
           </div>
           Tài Chính, Hóa Đơn & Sổ Cái Dòng Tiền (Finance)
         </h2>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className="text-xs text-[#828282] mt-1">
           Kiểm soát toàn bộ công nợ hóa đơn, ghi nhận dòng tiền thực tế với mã đối soát Idempotency và thanh lũy kế trực quan.
         </p>
       </div>
 
       {/* KPI Dòng Tiền & Công Nợ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-600 via-indigo-500 to-transparent" />
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#202020]" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
             Tổng Hóa Đơn Phát Hành
           </p>
-          <h4 className="text-xl font-black text-foreground font-mono mt-1">
+          <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
             {formatVND(totalInvoiceValue)}
           </h4>
-          <p className="mt-2 text-[11px] text-indigo-500 font-semibold font-mono">
+          <p className="mt-2 text-[11px] text-[#202020] font-semibold font-mono">
             {totalInvoicesCount} hóa đơn ({paidCount} đã tất toán)
           </p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-600 via-emerald-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#816729]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Tổng Tiền Thực Thu (Đã Vào Két)
               </p>
-              <h4 className="text-xl font-black text-emerald-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
                 {formatVND(totalCollectedCash)}
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#816729]/10 text-[#816729] border border-[#816729]/20">
               <TrendingUp className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-emerald-500 font-semibold font-mono">
+          <p className="mt-2 text-[11px] text-emerald-700 font-semibold font-mono">
             {transactions.length} giao dịch đã ghi nhận
           </p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-600 via-rose-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-rose-500" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Công Nợ Còn Phải Thu
               </p>
-              <h4 className="text-xl font-black text-rose-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-rose-600 font-mono mt-1">
                 {formatVND(totalOutstandingReceivables)}
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-700 border border-rose-200">
               <CreditCard className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-muted-foreground font-mono">
+          <p className="mt-2 text-[11px] text-[#828282] font-mono">
             {unpaidCount} chưa thu / {partialCount} thu 1 phần
           </p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#816729]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Hóa Đơn Quá Hạn
               </p>
-              <h4 className="text-xl font-black text-amber-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-amber-700 font-mono mt-1">
                 {overdueCount} hóa đơn
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-800 border border-amber-200">
               <AlertTriangle className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-muted-foreground">Cần kế toán đôn đốc nhắc nợ</p>
+          <p className="mt-2 text-[11px] text-[#828282]">Cần kế toán đôn đốc nhắc nợ</p>
         </Card>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="invoices" className="w-full">
-        <TabsList className="mb-4 bg-muted/50 p-1 rounded-xl border border-border/60">
-          <TabsTrigger value="invoices" className="rounded-lg text-xs font-semibold data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm flex items-center gap-1.5">
-            <Receipt className="h-3.5 w-3.5" />
+        <TabsList className="mb-4">
+          <TabsTrigger value="invoices" className="flex items-center gap-1.5">
+            <Receipt className="h-3.5 w-3.5 text-[#ff682c]" />
             Sổ Cái Hóa Đơn ({invoices.length})
           </TabsTrigger>
-          <TabsTrigger value="transactions" className="rounded-lg text-xs font-semibold data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm flex items-center gap-1.5">
-            <FileCheck className="h-3.5 w-3.5" />
+          <TabsTrigger value="transactions" className="flex items-center gap-1.5">
+            <FileCheck className="h-3.5 w-3.5 text-[#816729]" />
             Nhật Ký Dòng Tiền & Đối Soát ({transactions.length})
           </TabsTrigger>
         </TabsList>
@@ -330,10 +330,10 @@ export function FinanceView() {
               <button
                 key={pill.value}
                 onClick={() => setSelectedStatus(pill.value)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-all ${
+                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
                   selectedStatus === pill.value
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
-                    : 'bg-card text-muted-foreground border border-border/60 hover:bg-muted hover:text-foreground'
+                    ? 'bg-[#202020] text-white shadow-xs'
+                    : 'bg-[#efefef] text-[#4d4d4d] border border-[#e8e8e8] hover:bg-[#e8e8e8] hover:text-[#202020]'
                 }`}
               >
                 {pill.label} ({pill.count})

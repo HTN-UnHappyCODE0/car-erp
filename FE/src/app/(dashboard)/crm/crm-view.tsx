@@ -41,44 +41,44 @@ const KANBAN_COLUMNS: KanbanColumn[] = [
   {
     id: 'NEW',
     title: 'Mới Tiếp Nhận',
-    colorClass: 'border-blue-500/30 bg-blue-500/5',
-    badgeClass: 'bg-blue-500/10 text-blue-500 border border-blue-500/20',
-    indicatorColor: 'bg-blue-500',
+    colorClass: 'border-[#e8e8e8] bg-[#f5f5f5]/80',
+    badgeClass: 'bg-[#efefef] text-[#202020] border border-[#e8e8e8]',
+    indicatorColor: 'bg-[#828282]',
   },
   {
     id: 'CONTACTED',
     title: 'Đã Liên Hệ',
-    colorClass: 'border-indigo-500/30 bg-indigo-500/5',
-    badgeClass: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
-    indicatorColor: 'bg-indigo-500',
+    colorClass: 'border-[#e8e8e8] bg-[#f5f5f5]/80',
+    badgeClass: 'bg-[#ff682c]/10 text-[#ff682c] border border-[#ff682c]/20',
+    indicatorColor: 'bg-[#ff682c]',
   },
   {
     id: 'TEST_DRIVE',
     title: 'Đăng Ký Lái Thử',
-    colorClass: 'border-purple-500/30 bg-purple-500/5',
-    badgeClass: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
-    indicatorColor: 'bg-purple-500',
+    colorClass: 'border-[#ded7cb] bg-[#ebe6dd]/30',
+    badgeClass: 'bg-[#816729]/10 text-[#816729] border border-[#816729]/20',
+    indicatorColor: 'bg-[#816729]',
   },
   {
     id: 'QUOTED',
     title: 'Đã Gửi Báo Giá',
-    colorClass: 'border-amber-500/30 bg-amber-500/5',
-    badgeClass: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
-    indicatorColor: 'bg-amber-500',
+    colorClass: 'border-[#ded7cb] bg-[#ebe6dd]/50',
+    badgeClass: 'bg-[#816729]/15 text-[#816729] border border-[#816729]/30',
+    indicatorColor: 'bg-[#816729]',
   },
   {
     id: 'WON',
     title: 'Chốt Cọc (WON)',
-    colorClass: 'border-emerald-500/40 bg-emerald-500/10',
-    badgeClass: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
-    indicatorColor: 'bg-emerald-500',
+    colorClass: 'border-emerald-200 bg-emerald-50/40',
+    badgeClass: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
+    indicatorColor: 'bg-emerald-600',
   },
   {
     id: 'LOST',
     title: 'Thất Bại / Hủy',
-    colorClass: 'border-rose-500/30 bg-rose-500/5',
-    badgeClass: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
-    indicatorColor: 'bg-rose-500',
+    colorClass: 'border-rose-200 bg-rose-50/30',
+    badgeClass: 'bg-rose-50 text-rose-700 border border-rose-200',
+    indicatorColor: 'bg-rose-600',
   },
 ];
 
@@ -187,8 +187,8 @@ export function CRMView() {
       accessorKey: 'customer_name',
       cell: (row) => (
         <div>
-          <div className="font-semibold text-foreground">{row.customer_name || 'Khách hàng mới'}</div>
-          <div className="flex items-center gap-1 text-[11px] text-muted-foreground font-mono">
+          <div className="font-bold text-[#202020]">{row.customer_name || 'Khách hàng mới'}</div>
+          <div className="flex items-center gap-1 text-[11px] text-[#828282] font-mono mt-0.5">
             <Phone className="h-3 w-3" />
             {row.customer_phone || '-'}
           </div>
@@ -199,7 +199,7 @@ export function CRMView() {
       header: 'Dòng Xe Quan Tâm',
       accessorKey: 'model_name',
       cell: (row) => (
-        <span className="text-xs font-semibold text-indigo-500">
+        <span className="text-xs font-bold text-[#202020]">
           {row.model_name || 'Chưa chọn'}
         </span>
       ),
@@ -215,14 +215,14 @@ export function CRMView() {
             ? 'default'
             : row.status === 'LOST'
             ? 'destructive'
-            : 'secondary';
-        return <Badge variant={variant}>{row.status}</Badge>;
+            : 'ember';
+        return <Badge variant={variant} dot>{row.status}</Badge>;
       },
     },
     {
       header: 'Thời Gian Tiếp Nhận',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-muted-foreground font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
     },
     {
       header: 'Thao Tác',
@@ -230,19 +230,19 @@ export function CRMView() {
         <div className="flex items-center gap-2">
           {row.status === 'WON' ? (
             <Button
-              variant="brand"
+              variant="default"
               size="sm"
-              className="h-7 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm"
+              className="h-7 text-xs bg-[#202020] hover:bg-[#333333] text-white rounded-full shadow-xs"
               onClick={() => router.push('/sales')}
             >
-              <ShoppingBag className="mr-1 h-3.5 w-3.5" />
+              <ShoppingBag className="mr-1 h-3.5 w-3.5 text-[#ff682c]" />
               Lên Đơn Bán Xe
             </Button>
           ) : (
             <Button
               variant="outline"
               size="sm"
-              className="h-7 text-xs rounded-lg border-border/60 hover:bg-muted"
+              className="h-7 text-xs rounded-full border-[#e8e8e8] hover:bg-[#efefef] text-[#202020]"
               onClick={() => handleQuickAdvance(row)}
               disabled={row.status === 'LOST'}
             >
@@ -262,8 +262,8 @@ export function CRMView() {
       accessorKey: 'name',
       cell: (row) => (
         <div>
-          <div className="font-semibold text-foreground">{row.name}</div>
-          <Badge variant={row.type === 'ENTERPRISE' ? 'default' : 'secondary'} className="text-[9px] mt-0.5">
+          <div className="font-bold text-[#202020]">{row.name}</div>
+          <Badge variant={row.type === 'ENTERPRISE' ? 'graphite' : 'secondary'} className="text-[9px] mt-0.5">
             {row.type === 'ENTERPRISE' ? 'Doanh Nghiệp' : 'Cá Nhân'}
           </Badge>
         </div>
@@ -273,7 +273,7 @@ export function CRMView() {
       header: 'Số Điện Thoại',
       accessorKey: 'phone',
       cell: (row) => (
-        <span className="font-mono text-xs font-bold text-foreground">
+        <span className="font-mono text-xs font-bold text-[#202020]">
           {row.phone}
         </span>
       ),
@@ -281,21 +281,21 @@ export function CRMView() {
     {
       header: 'Email / CCCD',
       cell: (row) => (
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-[#828282]">
           <div>{row.email || '-'}</div>
-          <div className="font-mono text-[10px] text-muted-foreground/70">{row.id_card_number || ''}</div>
+          <div className="font-mono text-[10px] text-[#828282]/80">{row.id_card_number || ''}</div>
         </div>
       ),
     },
     {
       header: 'Địa Chỉ',
       accessorKey: 'address',
-      cell: (row) => <span className="text-xs text-muted-foreground truncate max-w-[200px]">{row.address || '-'}</span>,
+      cell: (row) => <span className="text-xs text-[#828282] truncate max-w-[200px]">{row.address || '-'}</span>,
     },
     {
       header: 'Ngày Tạo',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-muted-foreground font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
     },
   ];
 
@@ -304,13 +304,13 @@ export function CRMView() {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-500">
+          <h2 className="text-2xl font-heading font-bold tracking-tight text-[#202020] flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#202020] text-white">
               <Users className="h-4.5 w-4.5" />
             </div>
             Quản Lý Khách Hàng & Phễu Cơ Hội (CRM)
           </h2>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-[#828282] mt-1">
             Theo dõi tiến trình chăm sóc khách hàng theo State Machine, hạn chế trùng lặp SĐT và chốt hợp đồng.
           </p>
         </div>
@@ -323,7 +323,7 @@ export function CRMView() {
 
       {/* Cảnh báo vi phạm State Machine */}
       {transitionError && (
-        <div className="flex items-center gap-2.5 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-3.5 text-xs text-indigo-500 animate-fade-slide-up">
+        <div className="flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-700 animate-fade-slide-up">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{transitionError}</span>
         </div>
@@ -331,89 +331,89 @@ export function CRMView() {
 
       {/* KPI Phễu Bán Hàng */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-transparent" />
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#202020]" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
             Tổng Cơ Hội Tiếp Nhận
           </p>
-          <h4 className="text-xl font-black text-foreground font-mono mt-1">
+          <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
             {totalLeads} khách
           </h4>
-          <p className="mt-2 text-[11px] text-blue-500 font-semibold">Toàn bộ phễu bán hàng</p>
+          <p className="mt-2 text-[11px] text-[#828282] font-semibold">Toàn bộ phễu bán hàng</p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-600 via-indigo-500 to-transparent" />
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#ff682c]" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
             Đang Chăm Sóc Tích Cực
           </p>
-          <h4 className="text-xl font-black text-indigo-400 font-mono mt-1">
+          <h4 className="text-xl font-bold text-[#ff682c] font-mono mt-1">
             {inProgressLeads} cơ hội
           </h4>
-          <p className="mt-2 text-[11px] text-muted-foreground">Từ NEW đến QUOTED</p>
+          <p className="mt-2 text-[11px] text-[#828282]">Từ NEW đến QUOTED</p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-600 via-emerald-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#816729]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Tỷ Lệ Chốt Hợp Đồng
               </p>
-              <h4 className="text-xl font-black text-emerald-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
                 {conversionRate}%
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#816729]/10 text-[#816729] border border-[#816729]/20">
               <TrendingUp className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-emerald-500 font-semibold font-mono">{wonLeads} hợp đồng thành công</p>
+          <p className="mt-2 text-[11px] text-emerald-700 font-semibold font-mono">{wonLeads} hợp đồng thành công</p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-600 via-rose-500 to-transparent" />
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-rose-500" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
             Cơ Hội Thất Bại (LOST)
           </p>
-          <h4 className="text-xl font-black text-rose-500 font-mono mt-1">
+          <h4 className="text-xl font-bold text-rose-600 font-mono mt-1">
             {lostLeads} khách
           </h4>
-          <p className="mt-2 text-[11px] text-muted-foreground">Giá cao, mua hãng khác...</p>
+          <p className="mt-2 text-[11px] text-[#828282]">Giá cao, mua hãng khác...</p>
         </Card>
       </div>
 
       {/* Tabs View */}
       <Tabs defaultValue="leads" className="w-full">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <TabsList className="bg-muted/50 p-1 rounded-xl border border-border/60">
-            <TabsTrigger value="leads" className="rounded-lg text-xs font-semibold data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+          <TabsList>
+            <TabsTrigger value="leads">
               Phễu Cơ Hội Bán Hàng ({leads.length})
             </TabsTrigger>
-            <TabsTrigger value="customers" className="rounded-lg text-xs font-semibold data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="customers">
               Danh Bạ Khách Hàng ({customers.length})
             </TabsTrigger>
           </TabsList>
 
           {/* Toggle Kanban / Table */}
-          <div className="flex items-center gap-1 rounded-xl bg-muted/50 p-1 border border-border/60 self-start">
+          <div className="flex items-center gap-1 rounded-full bg-[#efefef] p-1 border border-[#e8e8e8] self-start">
             <button
               onClick={() => setViewMode('kanban')}
-              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all ${
                 viewMode === 'kanban'
-                  ? 'bg-card text-indigo-500 shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-white text-[#202020] shadow-xs'
+                  : 'text-[#828282] hover:text-[#202020]'
               }`}
             >
-              <Kanban className="h-3.5 w-3.5" />
+              <Kanban className="h-3.5 w-3.5 text-[#ff682c]" />
               Kanban Board
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all ${
                 viewMode === 'table'
-                  ? 'bg-card text-indigo-500 shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-white text-[#202020] shadow-xs'
+                  : 'text-[#828282] hover:text-[#202020]'
               }`}
             >
               <TableIcon className="h-3.5 w-3.5" />
@@ -437,11 +437,11 @@ export function CRMView() {
                     onDrop={() => handleDrop(col.id)}
                     className={`flex flex-col rounded-2xl border p-3 transition-all min-h-[480px] ${
                       col.colorClass
-                    } ${isOver ? 'ring-2 ring-indigo-500 scale-[1.01]' : 'border-border/60'}`}
+                    } ${isOver ? 'ring-2 ring-[#ff682c] scale-[1.01]' : 'border-[#e8e8e8]'}`}
                   >
                     {/* Header Cột */}
-                    <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-border/40">
-                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-[#e8e8e8]">
+                      <span className="text-xs font-bold text-[#202020] flex items-center gap-1.5">
                         <span className={`inline-block h-2 w-2 rounded-full ${col.indicatorColor}`} />
                         {col.title}
                       </span>
@@ -454,10 +454,10 @@ export function CRMView() {
                     <div className="flex-1 space-y-2.5 overflow-y-auto max-h-[600px] pr-0.5">
                       {isLeadsLoading ? (
                         Array.from({ length: 2 }).map((_, i) => (
-                          <div key={i} className="h-28 rounded-2xl bg-muted/60 skeleton-shimmer" />
+                          <div key={i} className="h-28 rounded-2xl bg-white skeleton-shimmer" />
                         ))
                       ) : columnLeads.length === 0 ? (
-                        <div className="flex h-32 flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 text-[11px] text-muted-foreground">
+                        <div className="flex h-32 flex-col items-center justify-center rounded-2xl border border-dashed border-[#e8e8e8] text-[11px] text-[#828282]">
                           Thả cơ hội vào đây
                         </div>
                       ) : (
@@ -466,57 +466,57 @@ export function CRMView() {
                             key={lead.id}
                             draggable
                             onDragStart={() => handleDragStart(lead)}
-                            className="group cursor-grab active:cursor-grabbing rounded-2xl border border-border/60 bg-card/90 backdrop-blur-sm p-3.5 shadow-sm hover:shadow-md hover:border-indigo-500/30 transition-all duration-200"
+                            className="group cursor-grab active:cursor-grabbing rounded-2xl border border-[#e8e8e8] bg-white p-3.5 shadow-xs hover:shadow-md hover:border-[#828282]/40 transition-all duration-200"
                           >
                             <div className="flex items-start justify-between">
-                              <h5 className="text-xs font-bold text-foreground group-hover:text-indigo-500 transition-colors">
+                              <h5 className="text-xs font-bold text-[#202020] group-hover:text-[#ff682c] transition-colors">
                                 {lead.customer_name || 'Khách hàng mới'}
                               </h5>
-                              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5 font-mono">
+                              <span className="text-[10px] text-[#828282] flex items-center gap-0.5 font-mono">
                                 <Clock className="h-2.5 w-2.5" />
                                 {formatDate(lead.created_at)}
                               </span>
                             </div>
 
                             {/* Số điện thoại */}
-                            <div className="mt-1.5 flex items-center gap-1 text-[11px] font-mono text-muted-foreground">
-                              <Phone className="h-3 w-3 text-muted-foreground/60" />
-                              <a href={`tel:${lead.customer_phone}`} className="hover:underline hover:text-foreground">
+                            <div className="mt-1.5 flex items-center gap-1 text-[11px] font-mono text-[#4d4d4d]">
+                              <Phone className="h-3 w-3 text-[#828282]" />
+                              <a href={`tel:${lead.customer_phone}`} className="hover:underline hover:text-[#202020]">
                                 {lead.customer_phone}
                               </a>
                             </div>
 
                             {/* Model xe quan tâm */}
                             {lead.model_name && (
-                              <div className="mt-2 flex items-center gap-1 rounded-lg bg-indigo-500/10 px-2 py-1 text-[10px] font-bold text-indigo-500 border border-indigo-500/20">
-                                <Car className="h-3 w-3 shrink-0" />
+                              <div className="mt-2 flex items-center gap-1 rounded-full bg-[#efefef] px-2.5 py-0.5 text-[10px] font-semibold text-[#202020] border border-[#e8e8e8]">
+                                <Car className="h-3 w-3 shrink-0 text-[#ff682c]" />
                                 <span className="truncate">{lead.model_name}</span>
                               </div>
                             )}
 
                             {lead.notes && (
-                              <p className="mt-2 text-[10px] text-muted-foreground line-clamp-2 italic">
+                              <p className="mt-2 text-[10px] text-[#828282] line-clamp-2 italic">
                                 &ldquo;{lead.notes}&rdquo;
                               </p>
                             )}
 
                             {/* Nút hành động */}
-                            <div className="mt-3 pt-2 border-t border-border/40 flex items-center justify-between">
+                            <div className="mt-3 pt-2 border-t border-[#e8e8e8] flex items-center justify-between">
                               {lead.status === 'WON' ? (
                                 <Button
-                                  variant="brand"
+                                  variant="default"
                                   size="sm"
-                                  className="w-full h-6 text-[10px] py-0 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm"
+                                  className="w-full h-6 text-[10px] py-0 bg-[#202020] hover:bg-[#333333] text-white rounded-full shadow-xs"
                                   onClick={() => router.push('/sales')}
                                 >
-                                  <ShoppingBag className="mr-1 h-3 w-3" />
+                                  <ShoppingBag className="mr-1 h-3 w-3 text-[#ff682c]" />
                                   Lên Đơn Bán Xe
                                 </Button>
                               ) : (
                                 <button
                                   onClick={() => handleQuickAdvance(lead)}
                                   disabled={lead.status === 'LOST'}
-                                  className="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 flex items-center gap-0.5 ml-auto"
+                                  className="text-[10px] font-semibold text-[#202020] hover:text-[#ff682c] flex items-center gap-0.5 ml-auto transition-colors"
                                 >
                                   Tiến bước
                                   <ChevronRight className="h-3 w-3" />
@@ -549,8 +549,8 @@ export function CRMView() {
               value={customerSearch}
               onChange={(e) => setCustomerSearch(e.target.value)}
               placeholder="Tra cứu theo SĐT, Tên, CCCD..."
-              icon={<Search className="h-4 w-4" />}
-              className="h-9 text-xs bg-card/70 border-border/60 rounded-xl focus:border-indigo-500/50 focus:ring-indigo-500/20"
+              icon={<Search className="h-4 w-4 text-[#828282]" />}
+              className="h-9.5 text-xs bg-[#f5f5f5] border-[#e8e8e8] rounded-full focus:border-[#ff682c] px-4"
             />
           </div>
 

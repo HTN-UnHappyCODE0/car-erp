@@ -1,63 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN SYSTEM: Automotive ERP — Soft Minimalist & Modern Light
-   Clean, light, harmonious palette with soft indigo & sky accents
-   Font: Plus Jakarta Sans (body) | Space Mono (mono/numbers)
+   DESIGN SYSTEM: Ventriloc Architecture & Editorial Minimalist
+   Based on deginStyles design tokens:
+   - Graphite (#202020), Canvas White (#ffffff), Ash (#efefef)
+   - Fog (#f5f5f5), Ivory (#ebe6dd), Steel (#4d4d4d)
+   - Slate (#828282), Mist (#e8e8e8), Ember Orange (#ff682c)
+   - Brass (#816729)
+   Font: Inter (UI/Body) | Plus Jakarta Sans (Display) | Space Mono (Data)
    ============================================================ */
 
 @layer base {
   :root {
-    /* === Core Light Mode Tokens === */
-    --background: 210 40% 98%; /* #f8fafc - Slate 50 very soft clean tint */
-    --foreground: 215 25% 20%; /* #293548 - Slate 800 readable primary text */
+    /* === deginStyles Core Color Tokens (HSL Mapping) === */
+    --color-graphite: #202020;
+    --color-canvas-white: #ffffff;
+    --color-ash: #efefef;
+    --color-fog: #f5f5f5;
+    --color-ivory: #ebe6dd;
+    --color-steel: #4d4d4d;
+    --color-slate: #828282;
+    --color-mist: #e8e8e8;
+    --color-ember-orange: #ff682c;
+    --color-brass: #816729;
 
-    --card: 0 0% 100%; /* #ffffff - Pure clean white card */
-    --card-foreground: 215 25% 20%;
+    /* === Shadcn Semantic Tokens === */
+    --background: 0 0% 100%; /* Canvas White #ffffff */
+    --foreground: 0 0% 13%; /* Graphite #202020 */
+
+    --card: 0 0% 100%; /* Canvas White */
+    --card-foreground: 0 0% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 20%;
+    --popover-foreground: 0 0% 13%;
 
-    /* Primary: Modern Soft Indigo */
-    --primary: 238 84% 67%; /* #6366f1 - Indigo 500 */
+    /* Primary CTA: Solid Graphite #202020 */
+    --primary: 0 0% 13%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%; /* #f1f5f9 - Slate 100 */
-    --secondary-foreground: 215 25% 20%;
+    /* Secondary / Container: Ash #efefef */
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 210 40% 96%; /* #f1f5f9 */
-    --muted-foreground: 215 16% 47%; /* #64748b - Slate 500 */
+    /* Muted / Neutral: Fog #f5f5f5 */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 51%; /* Slate #828282 */
 
-    /* Accent: Soft Sky / Slate */
-    --accent: 210 40% 96%;
-    --accent-foreground: 215 25% 20%;
+    /* Accent: Ash / Fog */
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 13%;
 
-    --destructive: 0 84% 60%; /* #ef4444 - Rose/Red */
+    /* Destructive / Energy Accent: Ember Orange #ff682c */
+    --destructive: 18 100% 59%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%; /* #e2e8f0 - Slate 200 */
-    --input: 214 32% 91%;
-    --ring: 238 84% 67%;
-    --radius: 1rem; /* 16px soft modern rounded corners */
+    /* Borders & Inputs: Mist #e8e8e8 */
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 18 100% 59%; /* Ember Orange focus ring */
+    --radius: 0.75rem; /* 12px */
 
-    /* === Custom Brand Tokens === */
-    --brand: 238 84% 67%;
-    --brand-rgb: 99 102 241;
-    --brand-glow: 238 84% 95%;
-    --brand-primary: 238 84% 67%;
-    --brand-primary-rgb: 99 102 241;
-    --brand-primary-light: 238 84% 95%;
+    /* === Custom Editorial Brand Tokens === */
+    --brand-ember: 18 100% 59%; /* #ff682c */
+    --brand-ember-rgb: 255 104 44;
+    --brand-brass: 42 52% 33%; /* #816729 */
+    --brand-ivory: 38 23% 89%; /* #ebe6dd */
+    --brand-ash: 0 0% 94%; /* #efefef */
+    --brand-fog: 0 0% 96%; /* #f5f5f5 */
+    --brand-graphite: 0 0% 13%; /* #202020 */
+    --brand-steel: 0 0% 30%; /* #4d4d4d */
+    --brand-slate: 0 0% 51%; /* #828282 */
+    --brand-mist: 0 0% 91%; /* #e8e8e8 */
 
-    /* === Sidebar Light Tokens === */
-    --sidebar-bg: 0 0% 100%;
-    --sidebar-fg: 215 25% 25%;
-    --sidebar-border: 214 32% 92%;
-    --sidebar-accent: 210 40% 98%;
-    --sidebar-active-bg: 238 84% 96%;
-    --sidebar-active-glow: 238 84% 96%;
-    --sidebar-active-text: 238 84% 58%;
+    /* === Sidebar Architectural Tokens === */
+    --sidebar-bg: 0 0% 100%; /* Canvas White */
+    --sidebar-fg: 0 0% 13%; /* Graphite */
+    --sidebar-border: 0 0% 91%; /* Mist */
+    --sidebar-accent: 0 0% 94%; /* Ash */
+    --sidebar-active-bg: 0 0% 94%; /* Ash */
+    --sidebar-active-text: 0 0% 13%; /* Graphite */
+    --sidebar-active-dot: 18 100% 59%; /* Ember Orange */
 
-    /* === Data-Dense Dashboard Tokens === */
+    /* === Data Layout Dimensions === */
     --grid-gap: 16px;
     --card-padding: 20px;
     --font-size-small: 12px;
@@ -81,16 +105,97 @@ html {
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-feature-settings: 'kern' 1, 'liga' 1, 'cv11' 1;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings with Neo-Grotesque Tracking */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  color: #202020;
+}
+
 /* Monospaced numbers & codes (VIN, amounts, IDs) */
 code, kbd, samp, .font-mono, [data-mono] {
   font-family: 'Space Mono', 'Courier New', monospace;
+}
+
+/* === deginStyles Surface Classes === */
+.bg-canvas {
+  background-color: #ffffff;
+}
+
+.bg-ash {
+  background-color: #efefef;
+}
+
+.bg-fog {
+  background-color: #f5f5f5;
+}
+
+.bg-ivory {
+  background-color: #ebe6dd;
+}
+
+.bg-graphite {
+  background-color: #202020;
+  color: #ffffff;
+}
+
+.bg-ember {
+  background-color: #ff682c;
+  color: #ffffff;
+}
+
+.bg-brass {
+  background-color: #816729;
+  color: #ffffff;
+}
+
+/* === deginStyles Typography Utility Classes === */
+.text-graphite {
+  color: #202020;
+}
+
+.text-steel {
+  color: #4d4d4d;
+}
+
+.text-slate {
+  color: #828282;
+}
+
+.text-ember {
+  color: #ff682c;
+}
+
+.text-brass {
+  color: #816729;
+}
+
+.border-mist {
+  border-color: #e8e8e8;
+}
+
+.border-ash {
+  border-color: #efefef;
+}
+
+/* === Pill Shapes & Architectural Accents === */
+.pill-pill {
+  border-radius: 200px;
+}
+
+.pill-container {
+  background-color: #efefef;
+  padding: 4px;
+  border-radius: 200px;
+  border: 1px solid #e8e8e8;
 }
 
 /* === Premium Custom Scrollbar === */
@@ -104,18 +209,16 @@ code, kbd, samp, .font-mono, [data-mono] {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: #e8e8e8;
   border-radius: 9999px;
   transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
+  background: #828282;
 }
 
-/* === Keyframe Animations (Smooth & Subtle) === */
-
-/* Entrance: Fade + Slide Up */
+/* === Keyframe Animations === */
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
@@ -127,13 +230,11 @@ code, kbd, samp, .font-mono, [data-mono] {
   }
 }
 
-/* Entrance: Fade In only */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Stagger List */
 @keyframes staggerIn {
   from {
     opacity: 0;
@@ -145,19 +246,16 @@ code, kbd, samp, .font-mono, [data-mono] {
   }
 }
 
-/* Shimmer loading skeleton */
 @keyframes shimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
 }
 
-/* Pulse glow for status indicators */
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-  50% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+@keyframes emberPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 104, 44, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 104, 44, 0); }
 }
 
-/* Slide in from left (sidebar items) */
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -169,13 +267,11 @@ code, kbd, samp, .font-mono, [data-mono] {
   }
 }
 
-/* Count up number animation */
 @keyframes countUp {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* === Utility Animation Classes === */
 .animate-fade-slide-up {
   animation: fadeSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
@@ -196,7 +292,6 @@ code, kbd, samp, .font-mono, [data-mono] {
   animation: countUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-/* Stagger delays for list items */
 .stagger-1 { animation-delay: 0.04s; }
 .stagger-2 { animation-delay: 0.08s; }
 .stagger-3 { animation-delay: 0.12s; }
@@ -204,7 +299,6 @@ code, kbd, samp, .font-mono, [data-mono] {
 .stagger-5 { animation-delay: 0.20s; }
 .stagger-6 { animation-delay: 0.24s; }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-slide-up,
   .animate-fade-in,
@@ -217,26 +311,26 @@ code, kbd, samp, .font-mono, [data-mono] {
 
 /* === Glassmorphism & Surface Utilities === */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid #e8e8e8;
 }
 
 .glass-dropdown {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid #e8e8e8;
 }
 
 /* === Shimmer Skeleton === */
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    hsl(var(--muted)) 25%,
-    hsl(var(--border)) 50%,
-    hsl(var(--muted)) 75%
+    #efefef 25%,
+    #e8e8e8 50%,
+    #efefef 75%
   );
   background-size: 400px 100%;
   animation: shimmer 1.4s ease-in-out infinite;
@@ -244,21 +338,22 @@ code, kbd, samp, .font-mono, [data-mono] {
 
 /* === Card Hover Micro-Interactions === */
 .kpi-card {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
 }
 
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 24px -6px rgba(32, 32, 32, 0.05), 0 4px 8px -4px rgba(32, 32, 32, 0.02);
+  border-color: #828282;
 }
 
 /* === Table Row Hover === */
 .table-row-hover tr:hover {
-  background-color: rgba(241, 245, 249, 0.6);
+  background-color: #f5f5f5;
   transition: background-color 0.15s ease;
 }
 
-/* === Status Dot Pulse (for live indicators) === */
+/* === Status Dot Pulse === */
 .status-dot-live::before {
   content: '';
   display: inline-block;
@@ -267,12 +362,12 @@ code, kbd, samp, .font-mono, [data-mono] {
   border-radius: 50%;
   background: currentColor;
   margin-right: 6px;
-  animation: pulseGlow 2s ease-in-out infinite;
+  animation: emberPulse 2s ease-in-out infinite;
 }
 
 /* === Focus Ring Enhancement === */
 *:focus-visible {
-  outline: 2px solid hsl(var(--primary));
+  outline: 2px solid #ff682c;
   outline-offset: 2px;
   border-radius: 6px;
 }

@@ -3,22 +3,30 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors select-none',
   {
     variants: {
       variant: {
         default:
-          'border-transparent bg-blue-100 text-blue-800',
+          'border border-[#e8e8e8] bg-[#efefef] text-[#202020]',
         secondary:
-          'border-transparent bg-slate-100 text-slate-900',
+          'border border-[#e8e8e8] bg-[#f5f5f5] text-[#4d4d4d]',
+        ember:
+          'border border-[#ff682c]/20 bg-[#ff682c]/10 text-[#ff682c] font-semibold',
+        brass:
+          'border border-[#816729]/20 bg-[#816729]/10 text-[#816729] font-semibold',
+        ivory:
+          'border border-[#ded7cb] bg-[#ebe6dd] text-[#202020]',
+        graphite:
+          'border border-[#202020] bg-[#202020] text-white',
         success:
-          'border-transparent bg-emerald-100 text-emerald-800',
+          'border border-emerald-200 bg-emerald-50 text-emerald-800',
         warning:
-          'border-transparent bg-amber-100 text-amber-800',
+          'border border-amber-200 bg-amber-50 text-amber-800',
         destructive:
-          'border-transparent bg-rose-100 text-rose-800',
+          'border border-rose-200 bg-rose-50 text-rose-800',
         outline:
-          'text-slate-950 border border-slate-200',
+          'border border-[#e8e8e8] text-[#4d4d4d] bg-transparent',
       },
     },
     defaultVariants: {
@@ -39,13 +47,16 @@ function Badge({ className, variant, dot = false, children, ...props }: BadgePro
       {dot && (
         <span
           className={cn(
-            'h-1.5 w-1.5 rounded-full',
-            variant === 'success' && 'bg-emerald-500 animate-pulse',
-            variant === 'warning' && 'bg-amber-500',
-            variant === 'destructive' && 'bg-rose-500',
-            variant === 'default' && 'bg-blue-500',
-            variant === 'secondary' && 'bg-slate-500',
-            variant === 'outline' && 'bg-slate-400'
+            'h-1.5 w-1.5 rounded-full shrink-0',
+            variant === 'success' && 'bg-emerald-600 animate-pulse',
+            variant === 'warning' && 'bg-amber-600',
+            variant === 'destructive' && 'bg-rose-600',
+            variant === 'ember' && 'bg-[#ff682c] animate-pulse',
+            variant === 'brass' && 'bg-[#816729]',
+            variant === 'graphite' && 'bg-white',
+            variant === 'default' && 'bg-[#202020]',
+            variant === 'secondary' && 'bg-[#828282]',
+            variant === 'outline' && 'bg-[#828282]'
           )}
         />
       )}

@@ -29,38 +29,38 @@ export function PaymentProgressBar({
     return (
       <div className={cn('space-y-1.5 min-w-[140px]', className)}>
         <div className="flex items-center justify-between text-[11px]">
-          <span className="font-semibold text-slate-700">
+          <span className="font-semibold text-[#202020]">
             {formatVND(paid)}
           </span>
           <span
             className={cn(
               'font-mono font-bold text-[10px]',
               isCompleted
-                ? 'text-emerald-600'
+                ? 'text-emerald-700'
                 : isPartial
-                ? 'text-blue-600'
-                : 'text-slate-400'
+                ? 'text-[#ff682c]'
+                : 'text-[#828282]'
             )}
           >
             {percentage}%
           </span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#efefef]">
           <div
             className={cn(
               'h-full rounded-full transition-all duration-500',
               isCompleted
-                ? 'bg-emerald-500'
+                ? 'bg-emerald-600'
                 : isPartial
-                ? 'bg-blue-600'
-                : 'bg-slate-300'
+                ? 'bg-[#ff682c]'
+                : 'bg-[#828282]/30'
             )}
             style={{ width: `${percentage}%` }}
           />
         </div>
         {remaining > 0 && (
-          <div className="text-[10px] text-slate-400">
-            Còn nợ: <span className="font-medium text-slate-600">{formatVND(remaining)}</span>
+          <div className="text-[10px] text-[#828282]">
+            Còn nợ: <span className="font-semibold text-[#202020]">{formatVND(remaining)}</span>
           </div>
         )}
       </div>
@@ -72,33 +72,33 @@ export function PaymentProgressBar({
       className={cn(
         'rounded-2xl border p-4 transition-all',
         isCompleted
-          ? 'border-emerald-200/80 bg-emerald-50/40'
+          ? 'border-emerald-200 bg-emerald-50/40'
           : isPartial
-          ? 'border-blue-200/80 bg-blue-50/40'
-          : 'border-slate-200 bg-slate-50/50',
+          ? 'border-[#ff682c]/20 bg-[#ff682c]/5'
+          : 'border-[#e8e8e8] bg-[#f5f5f5]',
         className
       )}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {isCompleted ? (
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           ) : isPartial ? (
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#ff682c]/10 text-[#ff682c]">
               <Clock className="h-4 w-4" />
             </div>
           ) : (
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-200 text-slate-700">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#efefef] text-[#828282] border border-[#e8e8e8]">
               <AlertCircle className="h-4 w-4" />
             </div>
           )}
           <div>
-            <h5 className="text-xs font-bold text-slate-900">
+            <h5 className="text-xs font-bold text-[#202020]">
               Tiến Độ Thu Tiền Thực Tế
             </h5>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-[#828282]">
               {isCompleted
                 ? 'Đã thu đủ 100% giá trị hóa đơn'
                 : isPartial
@@ -110,12 +110,12 @@ export function PaymentProgressBar({
         <div className="text-right">
           <span
             className={cn(
-              'text-lg font-black font-mono',
+              'text-lg font-bold font-mono',
               isCompleted
-                ? 'text-emerald-600'
+                ? 'text-emerald-700'
                 : isPartial
-                ? 'text-blue-600'
-                : 'text-slate-400'
+                ? 'text-[#ff682c]'
+                : 'text-[#828282]'
             )}
           >
             {percentage}%
@@ -124,33 +124,33 @@ export function PaymentProgressBar({
       </div>
 
       {/* Main Progress Bar */}
-      <div className="mt-3.5 h-2.5 w-full overflow-hidden rounded-full bg-slate-200/80">
+      <div className="mt-3.5 h-2 w-full overflow-hidden rounded-full bg-[#e8e8e8]">
         <div
           className={cn(
-            'h-full rounded-full transition-all duration-700 ease-out shadow-sm',
+            'h-full rounded-full transition-all duration-700 ease-out',
             isCompleted
-              ? 'bg-emerald-500 shadow-emerald-500/30'
+              ? 'bg-emerald-600'
               : isPartial
-              ? 'bg-blue-600 shadow-blue-500/30'
-              : 'bg-slate-300'
+              ? 'bg-[#ff682c]'
+              : 'bg-[#828282]/30'
           )}
           style={{ width: `${percentage}%` }}
         />
       </div>
 
       {/* Breakdown Details */}
-      <div className="mt-3 grid grid-cols-3 gap-2 border-t border-slate-200/60 pt-3 text-xs">
+      <div className="mt-3 grid grid-cols-3 gap-2 border-t border-[#e8e8e8] pt-3 text-xs">
         <div>
-          <span className="text-[10px] text-slate-500 block">Tổng Hóa Đơn:</span>
-          <span className="font-bold text-slate-900">{formatVND(total)}</span>
+          <span className="text-[10px] text-[#828282] block">Tổng Hóa Đơn:</span>
+          <span className="font-bold text-[#202020] font-mono">{formatVND(total)}</span>
         </div>
         <div>
-          <span className="text-[10px] text-emerald-600 block font-medium">Đã Thu:</span>
-          <span className="font-bold text-emerald-600">{formatVND(paid)}</span>
+          <span className="text-[10px] text-emerald-700 block font-medium">Đã Thu:</span>
+          <span className="font-bold text-emerald-700 font-mono">{formatVND(paid)}</span>
         </div>
         <div>
           <span className="text-[10px] text-rose-600 block font-medium">Còn Nợ:</span>
-          <span className="font-extrabold text-rose-600">{formatVND(remaining)}</span>
+          <span className="font-bold text-rose-600 font-mono">{formatVND(remaining)}</span>
         </div>
       </div>
     </div>

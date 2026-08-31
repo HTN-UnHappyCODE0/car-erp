@@ -50,26 +50,26 @@ export function DashboardView() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* ─── Hero Action Banner ─── */}
-      <div className="relative overflow-hidden rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-white p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-        {/* Glow backdrop */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-100/50 blur-3xl" />
+      {/* ─── Hero Action Banner (Ivory & Ash Warm Wash) ─── */}
+      <div className="relative overflow-hidden rounded-3xl border border-[#ded7cb] bg-[#ebe6dd] p-6 sm:p-8 shadow-[0_2px_12px_rgba(32,32,32,0.03)]">
+        {/* Top hairline accent */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#202020] via-[#ff682c] to-transparent" />
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-          <div className="space-y-1.5 max-w-xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-[11px] font-bold text-indigo-500">
-              <Sparkles className="h-3.5 w-3.5" /> Bảng Điều Hành Trực Tuyến Live
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ded7cb] bg-white px-3.5 py-1 text-[11px] font-semibold text-[#202020] shadow-xs">
+              <Sparkles className="h-3.5 w-3.5 text-[#ff682c]" /> Bảng Điều Hành Trực Tuyến Live
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold tracking-tight text-[#202020]">
               Trung Tâm Quản Trị Showroom Ô Tô
             </h2>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Dữ liệu đồng bộ thời gian thực với Backend Go & PostgreSQL Multi-Tenant. Quản lý kho VIN, đơn hàng State Machine và doanh thu.
+            <p className="text-xs text-[#4d4d4d] leading-relaxed">
+              Dữ liệu đồng bộ thời gian thực với Backend Go & PostgreSQL Multi-Tenant. Quản lý kho VIN, đơn hàng State Machine và kiểm soát dòng tiền bất biến.
             </p>
           </div>
 
           {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <CreateVehicleModal />
             <CreateOrderModal />
             <CreateLeadModal />
@@ -83,9 +83,9 @@ export function DashboardView() {
         <KPICard
           title="Xe Sẵn Sàng Bán (IN_STOCK)"
           value={`${inStockVehicles} xe`}
-          subtitle={`${reservedVehicles} xe cọc · ${soldVehicles} xe giao`}
+          subtitle={`${reservedVehicles} cọc · ${soldVehicles} đã giao`}
           icon={Car}
-          colorTheme="red"
+          colorTheme="ember"
           trend={{ value: '+12% tuần này', isPositive: true }}
           delayIndex={0}
         />
@@ -94,7 +94,7 @@ export function DashboardView() {
           value={formatVND(totalRevenue)}
           subtitle={`${invoices.length} hóa đơn tài chính`}
           icon={Receipt}
-          colorTheme="emerald"
+          colorTheme="brass"
           trend={{ value: 'Decimal Chuẩn xác', isPositive: true }}
           delayIndex={1}
         />
@@ -103,7 +103,7 @@ export function DashboardView() {
           value={`${activeLeads} khách`}
           subtitle={`Tổng số ${leads.length} cơ hội trong phễu`}
           icon={Users}
-          colorTheme="indigo"
+          colorTheme="ash"
           trend={{ value: 'Chuyển đổi cao', isPositive: true }}
           delayIndex={2}
         />
@@ -112,7 +112,7 @@ export function DashboardView() {
           value={`${inProgressRepairs} lệnh`}
           subtitle={`${repairOrders.length} lượt tiếp nhận`}
           icon={Wrench}
-          colorTheme="amber"
+          colorTheme="ivory"
           delayIndex={3}
         />
       </div>
@@ -120,41 +120,41 @@ export function DashboardView() {
       {/* ─── Main Grid: Recent Orders & Inventory Status ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Recent Sales Orders */}
-        <Card className="lg:col-span-2 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-border/40">
+        <Card className="lg:col-span-2 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <CardHeader className="flex flex-row items-center justify-between pb-3.5 border-b border-[#e8e8e8]">
             <div>
-              <CardTitle className="text-sm sm:text-base font-bold flex items-center gap-2 text-foreground">
-                <ShoppingBag className="h-4 w-4 text-indigo-500" />
+              <CardTitle className="text-sm sm:text-base font-heading font-bold flex items-center gap-2 text-[#202020]">
+                <ShoppingBag className="h-4 w-4 text-[#ff682c]" />
                 Đơn Bán Xe Gần Đây
               </CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-[#828282] mt-0.5">
                 Các hợp đồng ký kết mới nhất áp dụng khóa bi quan chống bán trùng VIN
               </p>
             </div>
             <Link href="/sales">
-              <Button variant="ghost" size="sm" className="text-xs text-indigo-500 hover:text-indigo-600 hover:bg-indigo-500/10">
+              <Button variant="ghost" size="sm" className="text-xs rounded-full text-[#4d4d4d] hover:text-[#202020] hover:bg-[#efefef]">
                 Xem tất cả <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </Link>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 space-y-2.5">
             {orders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted/50 mb-3 border border-border/50">
+              <div className="flex flex-col items-center justify-center py-12 text-center text-[#828282]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5f5f5] mb-3 border border-[#e8e8e8]">
                   <ShoppingBag className="h-6 w-6 stroke-[1.5]" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">Chưa có đơn hàng nào</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Nhấn &quot;Lên Đơn Bán Xe&quot; để tạo hợp đồng đầu tiên.</p>
+                <p className="text-sm font-bold text-[#202020]">Chưa có đơn hàng nào</p>
+                <p className="text-xs text-[#828282] mt-0.5">Nhấn &quot;Lên Đơn Bán Xe&quot; để tạo hợp đồng đầu tiên.</p>
               </div>
             ) : (
               orders.slice(0, 5).map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/20 p-3.5 transition-all duration-150 hover:bg-muted/40 hover:border-border"
+                  className="flex items-center justify-between rounded-xl border border-[#e8e8e8] bg-[#f5f5f5]/60 p-3.5 transition-all duration-150 hover:bg-[#efefef] hover:border-[#828282]/30"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-foreground">
+                      <span className="font-mono text-xs font-bold text-[#202020]">
                         #{order.id.slice(0, 8)}
                       </span>
                       <Badge
@@ -162,7 +162,7 @@ export function DashboardView() {
                           order.status === 'FULL_PAID' || order.status === 'DELIVERED'
                             ? 'success'
                             : order.status === 'DEPOSIT_PAID'
-                            ? 'warning'
+                            ? 'ember'
                             : order.status === 'CANCELLED'
                             ? 'destructive'
                             : 'secondary'
@@ -172,16 +172,16 @@ export function DashboardView() {
                         {order.status}
                       </Badge>
                     </div>
-                    <p className="text-[11px] text-muted-foreground font-medium">
+                    <p className="text-[11px] text-[#828282] font-medium">
                       Ngày tạo: {formatDate(order.created_at)}
                     </p>
                   </div>
 
                   <div className="text-right">
-                    <p className="text-sm font-black text-foreground font-mono">
+                    <p className="text-sm font-bold text-[#202020] font-mono">
                       {formatVND(order.total_amount)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground font-mono">
+                    <p className="text-[10px] text-[#828282] font-mono">
                       Cọc: {formatVND(order.deposit_amount)}
                     </p>
                   </div>
@@ -192,28 +192,28 @@ export function DashboardView() {
         </Card>
 
         {/* Quick Inventory Summary */}
-        <Card className="flex flex-col border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <CardHeader className="pb-3 border-b border-border/40">
-            <CardTitle className="text-sm sm:text-base font-bold flex items-center gap-2 text-foreground">
-              <Layers className="h-4 w-4 text-indigo-500" />
+        <Card className="flex flex-col border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <CardHeader className="pb-3.5 border-b border-[#e8e8e8]">
+            <CardTitle className="text-sm sm:text-base font-heading font-bold flex items-center gap-2 text-[#202020]">
+              <Layers className="h-4 w-4 text-[#ff682c]" />
               Tình Trạng Kho Xe
             </CardTitle>
-            <p className="text-xs text-muted-foreground">Phân loại xe thực tế theo trạng thái</p>
+            <p className="text-xs text-[#828282]">Phân loại xe thực tế theo trạng thái</p>
           </CardHeader>
           <CardContent className="flex-1 p-4 sm:p-5 space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-foreground font-medium">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="flex items-center gap-2 text-[#202020] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-emerald-600" />
                   Sẵn sàng bán (IN_STOCK)
                 </span>
-                <span className="font-bold text-foreground font-mono">
+                <span className="font-bold text-[#202020] font-mono">
                   {inStockVehicles} xe
                 </span>
               </div>
-              <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div className="h-2 w-full rounded-full bg-[#efefef] overflow-hidden">
                 <div
-                  className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                  className="h-full bg-emerald-600 rounded-full transition-all duration-500"
                   style={{
                     width: `${vehicles.length ? (inStockVehicles / vehicles.length) * 100 : 0}%`,
                   }}
@@ -223,17 +223,17 @@ export function DashboardView() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-foreground font-medium">
-                  <span className="h-2 w-2 rounded-full bg-amber-500" />
+                <span className="flex items-center gap-2 text-[#202020] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#ff682c]" />
                   Đang giữ cọc (RESERVED)
                 </span>
-                <span className="font-bold text-foreground font-mono">
+                <span className="font-bold text-[#202020] font-mono">
                   {reservedVehicles} xe
                 </span>
               </div>
-              <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div className="h-2 w-full rounded-full bg-[#efefef] overflow-hidden">
                 <div
-                  className="h-full bg-amber-500 rounded-full transition-all duration-500"
+                  className="h-full bg-[#ff682c] rounded-full transition-all duration-500"
                   style={{
                     width: `${vehicles.length ? (reservedVehicles / vehicles.length) * 100 : 0}%`,
                   }}
@@ -243,17 +243,17 @@ export function DashboardView() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-foreground font-medium">
-                  <span className="h-2 w-2 rounded-full bg-blue-500" />
+                <span className="flex items-center gap-2 text-[#202020] font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#816729]" />
                   Đã bàn giao (SOLD)
                 </span>
-                <span className="font-bold text-foreground font-mono">
+                <span className="font-bold text-[#202020] font-mono">
                   {soldVehicles} xe
                 </span>
               </div>
-              <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div className="h-2 w-full rounded-full bg-[#efefef] overflow-hidden">
                 <div
-                  className="h-full bg-blue-500 rounded-full transition-all duration-500"
+                  className="h-full bg-[#816729] rounded-full transition-all duration-500"
                   style={{
                     width: `${vehicles.length ? (soldVehicles / vehicles.length) * 100 : 0}%`,
                   }}
@@ -261,9 +261,9 @@ export function DashboardView() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-border/60">
+            <div className="pt-3 border-t border-[#e8e8e8]">
               <Link href="/inventory">
-                <Button variant="outline" className="w-full text-xs rounded-xl border-border/60 bg-card hover:bg-muted font-medium">
+                <Button variant="outline" className="w-full text-xs rounded-full border-[#e8e8e8] bg-[#f5f5f5] hover:bg-[#efefef] text-[#202020] font-medium">
                   Xem Danh Sách Kho Xe <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
               </Link>

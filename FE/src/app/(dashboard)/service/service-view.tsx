@@ -103,11 +103,11 @@ export function ServiceView() {
       accessorKey: 'id',
       cell: (row) => (
         <div>
-          <div className="flex items-center gap-1 font-mono text-xs font-bold text-indigo-500">
+          <div className="flex items-center gap-1 font-mono text-xs font-bold text-[#202020]">
             #{row.id.slice(0, 8)}
           </div>
-          <div className="flex items-center gap-1 font-mono text-xs text-foreground mt-0.5">
-            <Car className="h-3 w-3 text-indigo-500/70" />
+          <div className="flex items-center gap-1.5 font-mono text-xs text-[#4d4d4d] mt-0.5">
+            <Car className="h-3 w-3 text-[#ff682c]" />
             {row.vehicle_vin ? formatVIN(row.vehicle_vin) : 'Xe dịch vụ'}
           </div>
         </div>
@@ -119,11 +119,11 @@ export function ServiceView() {
       cell: (row) => {
         const variant =
           row.status === 'INVOICED'
-            ? 'default'
+            ? 'graphite'
             : row.status === 'COMPLETED'
             ? 'success'
             : row.status === 'IN_PROGRESS'
-            ? 'warning'
+            ? 'ember'
             : 'secondary';
 
         return (
@@ -138,12 +138,12 @@ export function ServiceView() {
       accessorKey: 'odometer',
       cell: (row) => (
         <div className="text-xs">
-          <div className="flex items-center gap-1 font-mono font-bold text-foreground">
-            <Gauge className="h-3.5 w-3.5 text-indigo-500" />
+          <div className="flex items-center gap-1.5 font-mono font-bold text-[#202020]">
+            <Gauge className="h-3.5 w-3.5 text-[#ff682c]" />
             {row.odometer?.toLocaleString('vi-VN')} km
           </div>
           {row.odometer_override_reason && (
-            <div className="flex items-center gap-0.5 text-[10px] text-amber-500 font-medium mt-0.5 font-mono">
+            <div className="flex items-center gap-0.5 text-[10px] text-amber-700 font-medium mt-0.5 font-mono">
               <AlertTriangle className="h-3 w-3" /> Đã ghi đè ODO
             </div>
           )}
@@ -155,10 +155,10 @@ export function ServiceView() {
       accessorKey: 'symptoms',
       cell: (row) => (
         <div className="max-w-[220px]">
-          <div className="font-semibold text-xs text-foreground">
+          <div className="font-bold text-xs text-[#202020]">
             {row.customer_name || 'Khách hàng'}
           </div>
-          <div className="text-[11px] text-muted-foreground truncate" title={row.symptoms || ''}>
+          <div className="text-[11px] text-[#828282] truncate" title={row.symptoms || ''}>
             {row.symptoms || '-'}
           </div>
         </div>
@@ -168,7 +168,7 @@ export function ServiceView() {
       header: 'Tổng Chi Phí',
       accessorKey: 'total_cost',
       cell: (row) => (
-        <span className="text-xs font-black text-emerald-500 font-mono">
+        <span className="text-xs font-bold text-[#202020] font-mono">
           {formatVND(row.total_cost)}
         </span>
       ),
@@ -176,7 +176,7 @@ export function ServiceView() {
     {
       header: 'Ngày Tiếp Nhận',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-muted-foreground font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
     },
     {
       header: 'Quy Trình & Thao Tác',
@@ -188,7 +188,7 @@ export function ServiceView() {
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+              className="h-7 w-7 p-0 rounded-full text-[#828282] hover:text-[#202020] hover:bg-[#efefef]"
               onClick={() => handleOpenDetail(row)}
               title="Xem chi tiết phiếu sửa chữa"
             >
@@ -199,7 +199,7 @@ export function ServiceView() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-0 rounded-lg text-indigo-500 hover:text-indigo-600 hover:bg-indigo-500/10"
+                className="h-7 w-7 p-0 rounded-full text-[#ff682c] hover:text-[#e0551c] hover:bg-[#ff682c]/10"
                 onClick={() => handleOpenHistory(row.vehicle_id, row.vehicle_vin)}
                 title="Xem toàn bộ lịch sử bảo dưỡng của xe này"
               >
@@ -211,43 +211,43 @@ export function ServiceView() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 text-xs rounded-lg border-border/60 hover:bg-muted"
+                className="h-7 text-xs rounded-full border-[#e8e8e8] hover:bg-[#efefef] text-[#202020]"
                 onClick={() => handleOpenAddItem(row.id)}
               >
-                <Plus className="mr-1 h-3.5 w-3.5" />
+                <Plus className="mr-1 h-3.5 w-3.5 text-[#ff682c]" />
                 Vật tư
               </Button>
             )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-7 text-xs rounded-lg border-border/60 hover:bg-muted">
+                <Button variant="outline" size="sm" className="h-7 text-xs rounded-full border-[#e8e8e8] hover:bg-[#efefef] text-[#202020]">
                   Tiến độ <ChevronRight className="ml-1 h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="border-[#e8e8e8] bg-white rounded-2xl shadow-xl p-1.5">
                 {row.status === 'OPEN' && (
                   <DropdownMenuItem
                     onClick={() => handleUpdateStatus(row.id, 'IN_PROGRESS')}
-                    className="cursor-pointer"
+                    className="cursor-pointer rounded-xl text-xs py-2 px-3 hover:bg-[#efefef]"
                   >
-                    <Wrench className="mr-2 h-3.5 w-3.5 text-blue-500" />
+                    <Wrench className="mr-2 h-3.5 w-3.5 text-[#ff682c]" />
                     Bắt đầu sửa chữa (IN_PROGRESS)
                   </DropdownMenuItem>
                 )}
                 {(row.status === 'OPEN' || row.status === 'IN_PROGRESS') && (
                   <DropdownMenuItem
                     onClick={() => handleUpdateStatus(row.id, 'COMPLETED')}
-                    className="cursor-pointer"
+                    className="cursor-pointer rounded-xl text-xs py-2 px-3 hover:bg-[#efefef]"
                   >
-                    <CheckCircle className="mr-2 h-3.5 w-3.5 text-emerald-500" />
+                    <CheckCircle className="mr-2 h-3.5 w-3.5 text-emerald-600" />
                     Nghiệm thu hoàn tất (COMPLETED)
                   </DropdownMenuItem>
                 )}
                 {row.status === 'COMPLETED' && (
                   <DropdownMenuItem
                     onClick={() => handleCreateInvoice(row.id)}
-                    className="cursor-pointer font-bold text-indigo-500"
+                    className="cursor-pointer font-bold text-[#ff682c] rounded-xl text-xs py-2 px-3 hover:bg-[#ff682c]/10"
                   >
                     <Receipt className="mr-2 h-3.5 w-3.5" />
                     Xuất Hóa Đơn Dịch Vụ (/finance)
@@ -266,13 +266,13 @@ export function ServiceView() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-500">
+          <h2 className="text-2xl font-heading font-bold tracking-tight text-[#202020] flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#202020] text-white">
               <Wrench className="h-4.5 w-4.5" />
             </div>
             Xưởng Dịch Vụ & Hậu Mãi (After-Sales Service)
           </h2>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-[#828282] mt-1">
             Quản lý tiếp nhận xe, kiểm soát Odometer chống tua lùi, kê khai bóc tách vật tư linh kiện và xuất hóa đơn dịch vụ.
           </p>
         </div>
@@ -281,73 +281,73 @@ export function ServiceView() {
 
       {/* KPI Xưởng Dịch Vụ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-600 via-indigo-500 to-transparent" />
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#202020]" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
             Tổng Lệnh Dịch Vụ
           </p>
-          <h4 className="text-xl font-black text-foreground font-mono mt-1">
+          <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
             {totalOrders} lệnh
           </h4>
-          <p className="mt-2 text-[11px] text-indigo-500 font-semibold font-mono">
+          <p className="mt-2 text-[11px] text-[#202020] font-semibold font-mono">
             {openOrders} tiếp nhận / {inProgressOrders} đang sửa
           </p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-600 via-emerald-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#816729]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Doanh Thu Xưởng Dịch Vụ
               </p>
-              <h4 className="text-xl font-black text-emerald-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
                 {formatVND(totalServiceRevenue)}
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#816729]/10 text-[#816729] border border-[#816729]/20">
               <DollarSign className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-emerald-500 font-semibold font-mono">
+          <p className="mt-2 text-[11px] text-emerald-700 font-semibold font-mono">
             {completedOrders + invoicedOrders} xe đã hoàn tất sửa chữa
           </p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#ff682c]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Xe Đang Trong Cầu Nâng
               </p>
-              <h4 className="text-xl font-black text-blue-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-[#ff682c] font-mono mt-1">
                 {inProgressOrders} xe
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff682c]/10 text-[#ff682c] border border-[#ff682c]/20">
               <Wrench className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-muted-foreground">Đang được đại tu/bảo dưỡng</p>
+          <p className="mt-2 text-[11px] text-[#828282]">Đang được đại tu/bảo dưỡng</p>
         </Card>
 
-        <Card className="kpi-card relative p-4.5 border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-500 to-transparent" />
+        <Card className="kpi-card relative p-4.5 border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#816729]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
                 Đã Nghiệm Thu & Xuất HĐ
               </p>
-              <h4 className="text-xl font-black text-amber-500 font-mono mt-1">
+              <h4 className="text-xl font-bold text-[#202020] font-mono mt-1">
                 {completedOrders} chờ thu / {invoicedOrders} đã xuất HĐ
               </h4>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#816729]/10 text-[#816729] border border-[#816729]/20">
               <Clock className="h-5 w-5" />
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-muted-foreground">Sẵn sàng bàn giao cho khách</p>
+          <p className="mt-2 text-[11px] text-[#828282]">Sẵn sàng bàn giao cho khách</p>
         </Card>
       </div>
 
@@ -363,10 +363,10 @@ export function ServiceView() {
           <button
             key={pill.value}
             onClick={() => setSelectedStatus(pill.value)}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
               selectedStatus === pill.value
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
-                : 'bg-card text-muted-foreground border border-border/60 hover:bg-muted hover:text-foreground'
+                ? 'bg-[#202020] text-white shadow-xs'
+                : 'bg-[#efefef] text-[#4d4d4d] border border-[#e8e8e8] hover:bg-[#e8e8e8] hover:text-[#202020]'
             }`}
           >
             {pill.label} ({pill.count})

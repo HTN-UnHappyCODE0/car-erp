@@ -15,52 +15,78 @@ interface KPICardProps {
     value: string;
     isPositive: boolean;
   };
-  colorTheme?: 'red' | 'blue' | 'emerald' | 'amber' | 'indigo' | 'rose' | 'purple';
+  colorTheme?: 'red' | 'blue' | 'emerald' | 'amber' | 'indigo' | 'rose' | 'purple' | 'ember' | 'brass' | 'ivory' | 'ash';
   delayIndex?: number;
 }
 
-const COLOR_STYLES = {
-  red: {
-    bg: 'bg-indigo-500/10',
-    iconText: 'text-indigo-600',
-    border: 'border-indigo-500/20',
-    topBar: 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-transparent',
+const COLOR_STYLES: Record<string, { bg: string; iconText: string; border: string; topBar: string; cardBg?: string }> = {
+  ember: {
+    bg: 'bg-[#ff682c]/10',
+    iconText: 'text-[#ff682c]',
+    border: 'border-[#ff682c]/20',
+    topBar: 'bg-[#ff682c]',
   },
-  blue: {
-    bg: 'bg-blue-500/10',
-    iconText: 'text-blue-600',
-    border: 'border-blue-500/20',
-    topBar: 'bg-gradient-to-r from-blue-600 via-blue-500 to-transparent',
+  brass: {
+    bg: 'bg-[#816729]/10',
+    iconText: 'text-[#816729]',
+    border: 'border-[#816729]/20',
+    topBar: 'bg-[#816729]',
+  },
+  ivory: {
+    bg: 'bg-[#ebe6dd]',
+    iconText: 'text-[#202020]',
+    border: 'border-[#ded7cb]',
+    topBar: 'bg-[#816729]',
+    cardBg: 'bg-[#ebe6dd]/40',
+  },
+  ash: {
+    bg: 'bg-[#efefef]',
+    iconText: 'text-[#202020]',
+    border: 'border-[#e8e8e8]',
+    topBar: 'bg-[#202020]',
+    cardBg: 'bg-[#efefef]/40',
   },
   emerald: {
-    bg: 'bg-emerald-500/10',
-    iconText: 'text-emerald-600',
-    border: 'border-emerald-500/20',
-    topBar: 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-transparent',
+    bg: 'bg-emerald-50',
+    iconText: 'text-emerald-700',
+    border: 'border-emerald-200',
+    topBar: 'bg-emerald-600',
   },
   amber: {
-    bg: 'bg-amber-500/10',
-    iconText: 'text-amber-600',
-    border: 'border-amber-500/20',
-    topBar: 'bg-gradient-to-r from-amber-600 via-amber-500 to-transparent',
+    bg: 'bg-amber-50',
+    iconText: 'text-amber-700',
+    border: 'border-amber-200',
+    topBar: 'bg-amber-600',
   },
   indigo: {
-    bg: 'bg-indigo-500/10',
-    iconText: 'text-indigo-600',
-    border: 'border-indigo-500/20',
-    topBar: 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-transparent',
+    bg: 'bg-[#efefef]',
+    iconText: 'text-[#202020]',
+    border: 'border-[#e8e8e8]',
+    topBar: 'bg-[#202020]',
+  },
+  blue: {
+    bg: 'bg-[#f5f5f5]',
+    iconText: 'text-[#202020]',
+    border: 'border-[#e8e8e8]',
+    topBar: 'bg-[#202020]',
+  },
+  red: {
+    bg: 'bg-[#ff682c]/10',
+    iconText: 'text-[#ff682c]',
+    border: 'border-[#ff682c]/20',
+    topBar: 'bg-[#ff682c]',
   },
   rose: {
-    bg: 'bg-rose-500/10',
-    iconText: 'text-rose-600',
-    border: 'border-rose-500/20',
-    topBar: 'bg-gradient-to-r from-rose-600 via-rose-500 to-transparent',
+    bg: 'bg-rose-50',
+    iconText: 'text-rose-700',
+    border: 'border-rose-200',
+    topBar: 'bg-rose-600',
   },
   purple: {
-    bg: 'bg-purple-500/10',
-    iconText: 'text-purple-600',
-    border: 'border-purple-500/20',
-    topBar: 'bg-gradient-to-r from-purple-600 via-purple-500 to-transparent',
+    bg: 'bg-[#816729]/10',
+    iconText: 'text-[#816729]',
+    border: 'border-[#816729]/20',
+    topBar: 'bg-[#816729]',
   },
 };
 
@@ -70,45 +96,48 @@ export function KPICard({
   subtitle,
   icon: Icon,
   trend,
-  colorTheme = 'red',
+  colorTheme = 'ember',
   delayIndex = 0,
 }: KPICardProps) {
-  const styles = COLOR_STYLES[colorTheme] || COLOR_STYLES.red;
+  const styles = COLOR_STYLES[colorTheme] || COLOR_STYLES.ember;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12, scale: 0.96 }}
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
-        duration: 0.35,
-        delay: delayIndex * 0.06,
-        ease: [0.34, 1.56, 0.64, 1], // UI/UX Pro Max back.out easing
+        duration: 0.3,
+        delay: delayIndex * 0.05,
+        ease: [0.34, 1.56, 0.64, 1],
       }}
       className="h-full"
     >
-      <Card className="kpi-card relative h-full p-4 sm:p-5 overflow-hidden border-border/60 bg-card/90 backdrop-blur-sm rounded-2xl">
-        {/* Subtle accent top line indicator */}
+      <Card className={cn(
+        "kpi-card relative h-full p-4 sm:p-5 overflow-hidden border border-[#e8e8e8] bg-white rounded-2xl shadow-[0_1px_3px_rgba(32,32,32,0.02)]",
+        styles.cardBg
+      )}>
+        {/* Accent top line indicator */}
         <div className={cn('absolute top-0 left-0 right-0 h-[2px]', styles.topBar)} />
 
         <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1 min-w-0">
-            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider truncate">
+          <div className="space-y-1.5 min-w-0">
+            <p className="text-[11px] font-semibold text-[#828282] uppercase tracking-wider truncate">
               {title}
             </p>
-            <h4 className="text-xl sm:text-2xl font-black tracking-tight text-foreground font-mono">
+            <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-[#202020] font-mono">
               {value}
             </h4>
           </div>
 
           <div
             className={cn(
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border shadow-sm transition-transform duration-200 group-hover:scale-105',
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border shadow-xs transition-transform duration-200 group-hover:scale-105',
               styles.bg,
               styles.iconText,
               styles.border
             )}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5" strokeWidth={2} />
           </div>
         </div>
 
@@ -117,10 +146,10 @@ export function KPICard({
             {trend && (
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 font-bold rounded-md px-1.5 py-0.5 text-[10px] tracking-wide font-mono',
+                  'inline-flex items-center gap-1 font-semibold rounded-full px-2 py-0.5 text-[10px] tracking-wide font-mono',
                   trend.isPositive
-                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                    : 'bg-[#ff682c]/10 text-[#ff682c] border border-[#ff682c]/20'
                 )}
               >
                 {trend.isPositive ? (
@@ -132,7 +161,7 @@ export function KPICard({
               </span>
             )}
             {subtitle && (
-              <span className="text-[11px] text-muted-foreground truncate">
+              <span className="text-[11px] text-[#828282] truncate">
                 {subtitle}
               </span>
             )}
