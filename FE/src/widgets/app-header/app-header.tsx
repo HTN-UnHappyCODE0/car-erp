@@ -85,213 +85,176 @@ export function AppHeader() {
   );
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-20 flex h-[60px] w-full items-center justify-between px-4 sm:px-6',
-        'border-b border-[#e8e8e8]',
-        'bg-white/95 backdrop-blur-md',
-        'animate-fade-in'
-      )}
-    >
-      {/* ─── Left: Mobile Menu + Breadcrumbs + Branch Switcher ─── */}
-      <div className="flex items-center gap-3">
-        {/* Mobile Hamburger */}
-        <div className="lg:hidden">
+    <>
+      <header
+        className={cn(
+          'sticky top-0 z-20 flex h-[60px] w-full items-center justify-between px-4 sm:px-6',
+          'border-b border-[#e8e8e8]',
+          'bg-white/95 backdrop-blur-md',
+          'animate-fade-in'
+        )}
+      >
+        {/* Left: Mobile Trigger & Breadcrumb */}
+        <div className="flex items-center gap-3">
+          {/* Mobile hamburger menu */}
           <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full text-[#4d4d4d] hover:text-[#202020] hover:bg-[#efefef]"
-                title="Mở menu điều hướng"
+                size="sm"
+                className="lg:hidden h-8 w-8 p-0 text-[#828282] hover:text-[#202020] hover:bg-[#efefef] rounded-full"
               >
-                <Menu className="h-4.5 w-4.5" />
+                <Menu className="h-4 w-4" />
+                <span className="sr-only">Mở menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-[250px] bg-white border-r border-[#e8e8e8] shadow-xl">
-              <SidebarNavContent
-                isMobile
-                onItemClick={() => setMobileSheetOpen(false)}
-              />
+            <SheetContent side="left" className="p-0 w-[280px] bg-white border-r border-[#e8e8e8]">
+              <SidebarNavContent isMobile onItemClick={() => setMobileSheetOpen(false)} />
             </SheetContent>
           </Sheet>
-        </div>
 
-        {/* Breadcrumbs */}
-        <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-2 text-xs text-[#828282]">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 hover:text-[#202020] transition-colors font-medium"
-          >
-            <Home className="h-3.5 w-3.5" />
-            <span>Hệ Thống</span>
-          </Link>
-          {pathname !== '/' && (
-            <>
-              <ChevronRight className="h-3 w-3 text-[#828282]" />
-              <span className="font-semibold text-[#202020]">
-                {currentNavItem?.title || 'Phân Hệ'}
-              </span>
-            </>
-          )}
-        </nav>
-
-        {/* Branch Switcher (Pill style) */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                'flex items-center gap-1.5 rounded-full text-xs h-8 px-3.5 font-medium',
-                'border-[#e8e8e8] bg-[#efefef] text-[#202020] hover:bg-[#e8e8e8]',
-                'transition-all duration-200 shadow-xs'
-              )}
+          {/* Clean Breadcrumb */}
+          <nav className="flex items-center gap-2 text-xs">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 font-medium text-[#828282] hover:text-[#202020] transition-colors"
             >
-              <Building2 className="h-3.5 w-3.5 text-[#ff682c] shrink-0" />
-              <span className="max-w-[110px] sm:max-w-[170px] truncate">
-                {activeBranch ? activeBranch.name : 'Chọn Showroom...'}
-              </span>
-              <ChevronDown className="h-3 w-3 text-[#828282] shrink-0" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-64 border-[#e8e8e8] bg-white shadow-xl rounded-2xl p-1.5">
-            <div className="px-3 py-2 text-[10px] font-bold text-[#828282] uppercase tracking-[0.1em]">
-              Chuyển Đổi Showroom
-            </div>
-            <DropdownMenuSeparator className="bg-[#e8e8e8]" />
-            {branches.map((b) => {
-              const isSelected = (activeBranch?.id || branches[0]?.id) === b.id;
-              return (
-                <DropdownMenuItem
-                  key={b.id}
-                  onClick={() => handleBranchChange(b.id)}
-                  className={cn(
-                    'flex items-center justify-between text-xs py-2.5 px-3 rounded-xl cursor-pointer transition-colors',
-                    isSelected ? 'bg-[#efefef] text-[#202020] font-bold' : 'hover:bg-[#f5f5f5]'
-                  )}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-medium">
-                      {b.name}
-                    </span>
-                    <span className="text-[10px] text-[#828282] font-mono">{b.code}</span>
-                  </div>
-                  {isSelected && <Check className="h-3.5 w-3.5 text-[#ff682c]" />}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+              <Home className="h-3.5 w-3.5 text-[#828282]" />
+              <span className="hidden sm:inline">Tổng quan</span>
+            </Link>
 
-      {/* ─── Right: Search + Settings + Profile ─── */}
-      <div className="flex items-center gap-2.5">
-        {/* Global Search */}
-        <div className="hidden xl:flex w-64">
-          <Input
-            placeholder="Tra cứu VIN, SĐT khách..."
-            icon={<Search className="h-3.5 w-3.5 text-[#828282]" />}
-            className="h-9 text-[13px] bg-[#f5f5f5] border-[#e8e8e8] focus:border-[#ff682c] rounded-full px-4"
-          />
+            {currentNavItem && currentNavItem.href !== '/' && (
+              <>
+                <span className="text-[#828282]">/</span>
+                <span className="font-semibold text-[#202020]">
+                  {currentNavItem.title}
+                </span>
+              </>
+            )}
+          </nav>
         </div>
 
-        {/* Settings */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.push('/settings')}
-          className="h-8.5 w-8.5 rounded-full text-[#4d4d4d] hover:text-[#202020] hover:bg-[#efefef] transition-all"
-          title="Cài đặt hệ thống"
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
+        {/* Right: Branch Selector & Profile */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Branch Switcher Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={cn(
+                  'flex items-center gap-2 rounded-full border border-[#e8e8e8]',
+                  'bg-white px-3 py-1.5 text-xs font-medium text-[#202020]',
+                  'shadow-xs hover:border-[#828282] hover:bg-[#fafafa] transition-all',
+                  'focus:outline-none focus:ring-2 focus:ring-[#202020]/20'
+                )}
+              >
+                <Building2 className="h-3.5 w-3.5 text-[#828282]" />
+                <span className="max-w-[120px] sm:max-w-[160px] truncate font-semibold">
+                  {activeBranch?.name ?? 'Chi nhánh'}
+                </span>
+                <ChevronDown className="h-3 w-3 text-[#828282] ml-0.5 shrink-0" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-56 rounded-2xl border border-[#e8e8e8] bg-white p-1.5 shadow-xl"
+            >
+              <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
+                Chọn chi nhánh
+              </div>
+              <DropdownMenuSeparator className="bg-[#e8e8e8]" />
+              {branches.map((branch) => {
+                const isSelected = branch.id === activeBranchId;
+                return (
+                  <DropdownMenuItem
+                    key={branch.id}
+                    onClick={() => handleBranchChange(branch.id)}
+                    className={cn(
+                      'flex items-center justify-between rounded-xl px-2.5 py-2 text-xs font-medium cursor-pointer transition-colors',
+                      isSelected
+                        ? 'bg-[#202020] text-white font-semibold'
+                        : 'text-[#202020] hover:bg-[#efefef]'
+                    )}
+                  >
+                    <span className="truncate">{branch.name}</span>
+                    {isSelected && <Check className="h-3.5 w-3.5 shrink-0 ml-2" />}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        {/* Divider */}
-        <div className="w-px h-5 bg-[#e8e8e8]" />
-
-        {/* User Profile Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className={cn(
-              'flex items-center gap-2.5 rounded-full pl-1.5 pr-3 py-1',
-              'bg-[#f5f5f5] hover:bg-[#efefef] transition-all duration-200 focus:outline-none',
-              'border border-[#e8e8e8]'
-            )}>
-              {/* Avatar */}
-              <div className="relative">
-                <Avatar className="h-7 w-7 shadow-xs">
-                  <AvatarFallback className="text-[11px] font-bold bg-[#202020] text-white border-0">
-                    {user?.username?.slice(0, 2).toUpperCase() || 'AD'}
+          {/* User Profile Avatar Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={cn(
+                  'flex items-center gap-2 rounded-full p-0.5 transition-all',
+                  'border border-[#e8e8e8] hover:border-[#828282]',
+                  'focus:outline-none focus:ring-2 focus:ring-[#202020]/20'
+                )}
+              >
+                <Avatar className="h-7 w-7 rounded-full bg-[#efefef]">
+                  <AvatarFallback className="text-[11px] font-bold text-[#202020] bg-[#efefef] rounded-full">
+                    {user?.username ? user.username.slice(0, 2).toUpperCase() : 'AD'}
                   </AvatarFallback>
                 </Avatar>
-                {/* Online dot: Ember Orange */}
-                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#ff682c] ring-1.5 ring-white" />
-              </div>
-              {/* Name + Role */}
-              <div className="hidden md:flex flex-col text-left leading-tight">
-                <span className="text-xs font-bold text-[#202020] truncate max-w-[90px]">
-                  {user?.username || 'Admin'}
-                </span>
-                <span className={cn('text-[9px] uppercase font-bold tracking-wider', roleInfo.color)}>
-                  {roleInfo.label}
-                </span>
-              </div>
-              <ChevronDown className="hidden sm:block h-3 w-3 text-[#828282]" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 border-[#e8e8e8] bg-white shadow-xl rounded-2xl p-1.5">
-            {/* User header */}
-            <div className="px-3 py-2.5 border-b border-[#e8e8e8]">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8 shadow-xs">
-                  <AvatarFallback className="text-xs font-bold bg-[#202020] text-white border-0">
-                    {user?.username?.slice(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-xs font-bold text-[#202020]">{user?.username || 'admin'}</p>
-                  <p className={cn('text-[10px] uppercase font-bold tracking-wide mt-0.5', roleInfo.color)}>
-                    {roleInfo.label}
-                  </p>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-52 rounded-2xl border border-[#e8e8e8] bg-white p-1.5 shadow-xl"
+            >
+              <div className="px-3 py-2.5 border-b border-[#e8e8e8] mb-1">
+                <div className="flex items-center gap-2.5">
+                  <Avatar className="h-8 w-8 rounded-full bg-[#efefef]">
+                    <AvatarFallback className="text-xs font-bold text-[#202020] bg-[#efefef] rounded-full">
+                      {user?.username ? user.username.slice(0, 2).toUpperCase() : 'AD'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-xs font-bold text-[#202020]">{user?.username || 'admin'}</p>
+                    <p className={cn('text-[10px] uppercase font-bold tracking-wide mt-0.5', roleInfo.color)}>
+                      {roleInfo.label}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <DropdownMenuItem onClick={() => router.push('/settings')} className="text-xs cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-[#efefef] text-[#202020]">
-              <UserIcon className="h-4 w-4 text-[#828282]" />
-              Hồ Sơ & Cấu Hình
-            </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#e8e8e8]" />
-            <DropdownMenuItem
-              onClick={() => setShowLogoutDialog(true)}
-              className="text-xs text-rose-600 focus:text-rose-600 cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-rose-50"
-            >
-              <LogOut className="h-4 w-4" />
-              Đăng Xuất
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </header>
+              <DropdownMenuItem onClick={() => router.push('/settings')} className="text-xs cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-[#efefef] text-[#202020]">
+                <UserIcon className="h-4 w-4 text-[#828282]" />
+                Hồ Sơ & Cấu Hình
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-[#e8e8e8]" />
+              <DropdownMenuItem
+                onClick={() => setShowLogoutDialog(true)}
+                className="text-xs text-rose-600 focus:text-rose-600 cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-rose-50"
+              >
+                <LogOut className="h-4 w-4" />
+                Đăng Xuất
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
 
-    <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
-          <AlertDialogDescription>
-            Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không? Phiên làm việc hiện tại sẽ kết thúc.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleLogoutConfirm}
-            className="bg-red-500 hover:bg-red-600 text-white"
-          >
-            Đăng xuất
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không? Phiên làm việc hiện tại sẽ kết thúc.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLogoutConfirm}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Đăng xuất
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
