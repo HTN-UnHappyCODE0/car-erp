@@ -39,7 +39,7 @@ func NewAuthHandler(
 }
 
 type loginRequest struct {
-	Username string `json:"username" binding:"required,alphanum"`
+	Username string `json:"username" binding:"required,min=3"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
