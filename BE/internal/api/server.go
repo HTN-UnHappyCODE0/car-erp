@@ -50,10 +50,10 @@ func NewServer(cfg *config.Config, store db.Store, tokenMaker token.Maker, pgPoo
 }
 
 func (server *Server) setupRouter() {
-	// 1. Global Middlewares
+	// 1. Global Middlewares (CORSMiddleware phải chạy đầu tiên để chặn và phản hồi Preflight OPTIONS)
+	server.router.Use(middleware.CORSMiddleware(server.config.CORSAllowedOrigins))
 	server.router.Use(logger.StructuredLoggerMiddleware(server.slogger))
 	server.router.Use(middleware.SecurityHeadersMiddleware())
-	server.router.Use(middleware.CORSMiddleware(server.config.CORSAllowedOrigins))
 	server.router.Use(gin.Recovery())
 
 	// Giới hạn kích thước tối đa của Request Body (10MB) chống DOS
