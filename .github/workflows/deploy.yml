@@ -34,7 +34,7 @@ jobs:
               User ${{ secrets.SERVER_USER }}
               Port 22022
               IdentityFile ~/.ssh/id_rsa
-              ProxyCommand cloudflared access ssh --hostname ssh.namhoanglegal.com
+              ProxyCommand cloudflared access ssh --hostname %h
               StrictHostKeyChecking no
               UserKnownHostsFile=/dev/null
           EOF
@@ -42,8 +42,8 @@ jobs:
 
       - name: Execute Deployment on Remote Server via Tunnel
         run: |
-          # 5. Gọi lệnh ssh sử dụng file cấu hình để thực thi lệnh deploy trên server
-          ssh -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
+          # 5. Gọi lệnh ssh (sử dụng cờ -T để tránh lỗi tty) thông qua file cấu hình để thực thi lệnh deploy
+          ssh -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
             docker compose up --build -d
