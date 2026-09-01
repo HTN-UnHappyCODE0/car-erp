@@ -17,8 +17,12 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Set up Cloudflare Tunnel (cloudflared)
-        uses: cloudflare/setup-cloudflared@v3
+      - name: Install Cloudflared on Runner
+        run: |
+          # Tự động tải và cài đặt cloudflared trực tiếp trên môi trường chạy của GitHub Actions
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared.deb
+          cloudflared --version
 
       - name: Deploy to Ubuntu Server via Zero Trust Tunnel
         uses: appleboy/ssh-action@v1.0.3
