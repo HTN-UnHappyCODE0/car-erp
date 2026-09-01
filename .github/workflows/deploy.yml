@@ -15,35 +15,31 @@ jobs:
 
       - name: Setup SSH Key & Cloudflare Zero Trust Tunnel
         run: |
-          # 1. Tạo thư mục bảo mật cho cấu hình SSH
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # 2. Đưa Private Key từ GitHub Secret vào file định danh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # 3. Tải và cài đặt công cụ cloudflared để mở đường hầm
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
 
-          # 4. Tạo file cấu hình SSH định tuyến qua Cloudflare Access kèm Service Token
           cat << 'EOF' > ~/.ssh/config
           Host ssh.namhoanglegal.com
-              HostName ssh.namhoanglegal.com
-              User ${{ secrets.SERVER_USER }}
-              Port 22
-              IdentityFile ~/.ssh/id_rsa
-              ProxyCommand cloudflared access ssh --hostname %h --client-id ${{ secrets.CF_ACCESS_CLIENT_ID }} --client-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
-              StrictHostKeyChecking no
-              UserKnownHostsFile=/dev/null
+            HostName ssh.namhoanglegal.com
+            User ${{ secrets.SERVER_USER }}
+            Port 22        # <--- ĐẢM BẢO LÀ CỔNG 22
+            IdentityFile ~/.ssh/id_rsa
+            ProxyCommand cloudflared access ssh --hostname %h --client-id ${{ secrets.CF_ACCESS_CLIENT_ID }} --client-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
           EOF
           chmod 600 ~/.ssh/config
 
       - name: Execute Deployment on Remote Server via Tunnel
         run: |
-          # 5. Gọi lệnh ssh (với cờ -T) qua file cấu hình để thực thi lệnh deploy trên server Ubuntu
-          ssh -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
+          # Đã thêm cờ -vvv để soi chi tiết tiến trình kết nối
+          ssh -vvv -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
             docker compose up --build -d
