@@ -8,7 +8,14 @@ import { z } from 'zod';
 import { AxiosError } from 'axios';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/shared/components/ui/card';
 import { useAuthStore, AuthUser } from '@/shared/store/auth-store';
 import { axiosClient } from '@/shared/api/axios-client';
 import { ApiResponse } from '@/shared/types/api';
@@ -82,16 +89,16 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full border border-[#e8e8e8] bg-white shadow-[0_4px_20px_rgba(32,32,32,0.04)] rounded-3xl p-2.5">
+    <Card className="w-full rounded-3xl border border-[#e8e8e8] bg-white p-2.5 shadow-[0_4px_20px_rgba(32,32,32,0.04)]">
       <CardHeader className="space-y-1.5 pb-4">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-[#202020] bg-[#efefef] w-fit px-3 py-1 rounded-full border border-[#e8e8e8]">
+        <div className="flex w-fit items-center gap-1.5 rounded-full border border-[#e8e8e8] bg-[#efefef] px-3 py-1 text-xs font-semibold text-[#202020]">
           <ShieldCheck className="h-3.5 w-3.5 text-[#ff682c]" />
           <span>Bảo mật JWT & RLS</span>
         </div>
-        <CardTitle className="text-xl font-heading font-bold tracking-tight text-[#202020]">
-          Cổng Xác Thực
+        <CardTitle className="font-heading text-xl font-bold tracking-tight text-[#202020]">
+          Cổng Xác Thực LOGIN
         </CardTitle>
-        <CardDescription className="text-xs text-[#828282] font-normal">
+        <CardDescription className="text-xs font-normal text-[#828282]">
           Vui lòng điền thông tin tài khoản để truy cập hệ thống.
         </CardDescription>
       </CardHeader>
@@ -101,14 +108,14 @@ export function LoginForm() {
           {/* Server Error Alert */}
           {serverError && (
             <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <span className="font-medium">{serverError}</span>
             </div>
           )}
 
           {/* Username Input */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#828282] ml-1">
+            <label className="ml-1 text-[11px] font-semibold tracking-wider text-[#828282] uppercase">
               Tên Đăng Nhập / Email <span className="text-[#ff682c]">*</span>
             </label>
             <Input
@@ -117,22 +124,24 @@ export function LoginForm() {
               placeholder="admin"
               icon={<User className="h-4 w-4 text-[#828282]" />}
               autoComplete="username"
-              className={`h-11 text-[13px] bg-white border-[#e8e8e8] text-[#202020] placeholder:text-[#828282] rounded-xl focus:border-[#ff682c] focus:ring-[#ff682c] shadow-xs transition-all ${
+              className={`h-11 rounded-xl border-[#e8e8e8] bg-white text-[13px] text-[#202020] shadow-xs transition-all placeholder:text-[#828282] focus:border-[#ff682c] focus:ring-[#ff682c] ${
                 errors.username ? 'border-rose-400 focus:ring-rose-400' : ''
               }`}
             />
             {errors.username && (
-              <p className="text-[11px] font-semibold text-rose-600 ml-1 mt-1">{errors.username.message}</p>
+              <p className="mt-1 ml-1 text-[11px] font-semibold text-rose-600">
+                {errors.username.message}
+              </p>
             )}
           </div>
 
           {/* Password Input */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between ml-1">
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-[#828282]">
+            <div className="ml-1 flex items-center justify-between">
+              <label className="text-[11px] font-semibold tracking-wider text-[#828282] uppercase">
                 Mật Khẩu <span className="text-[#ff682c]">*</span>
               </label>
-              <span className="text-[11px] font-medium text-[#828282] hover:text-[#ff682c] cursor-pointer hover:underline transition-all">
+              <span className="cursor-pointer text-[11px] font-medium text-[#828282] transition-all hover:text-[#ff682c] hover:underline">
                 Quên mật khẩu?
               </span>
             </div>
@@ -142,12 +151,14 @@ export function LoginForm() {
               placeholder="••••••••"
               icon={<Lock className="h-4 w-4 text-[#828282]" />}
               autoComplete="current-password"
-              className={`h-11 text-[13px] bg-white border-[#e8e8e8] text-[#202020] placeholder:text-[#828282] rounded-xl focus:border-[#ff682c] focus:ring-[#ff682c] shadow-xs transition-all ${
+              className={`h-11 rounded-xl border-[#e8e8e8] bg-white text-[13px] text-[#202020] shadow-xs transition-all placeholder:text-[#828282] focus:border-[#ff682c] focus:ring-[#ff682c] ${
                 errors.password ? 'border-rose-400 focus:ring-rose-400' : ''
               }`}
             />
             {errors.password && (
-              <p className="text-[11px] font-semibold text-rose-600 ml-1 mt-1">{errors.password.message}</p>
+              <p className="mt-1 ml-1 text-[11px] font-semibold text-rose-600">
+                {errors.password.message}
+              </p>
             )}
           </div>
         </CardContent>
@@ -155,10 +166,10 @@ export function LoginForm() {
         <CardFooter className="flex flex-col gap-3.5 pt-2">
           <Button
             type="submit"
-            className="w-full h-11 text-[13px] font-bold tracking-wide bg-[#202020] hover:bg-[#333333] text-white shadow-sm rounded-xl transition-all active:scale-[0.98]"
+            className="h-11 w-full rounded-xl bg-[#202020] text-[13px] font-bold tracking-wide text-white shadow-sm transition-all hover:bg-[#333333] active:scale-[0.98]"
             isLoading={isSubmitting}
           >
-            <Sparkles className="h-4 w-4 mr-2 text-[#ff682c]" />
+            <Sparkles className="mr-2 h-4 w-4 text-[#ff682c]" />
             Đăng Nhập
           </Button>
 
