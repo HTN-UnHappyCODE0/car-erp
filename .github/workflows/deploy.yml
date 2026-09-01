@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH Key & Cloudflare Tunnel Proxy
+      - name: Setup SSH Key & Cloudflare Zero Trust Tunnel
         run: |
           # 1. Tạo thư mục bảo mật cho SSH
           mkdir -p ~/.ssh
@@ -27,14 +27,14 @@ jobs:
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
 
-          # 4. Tạo file cấu hình SSH định tuyến qua Cloudflare Access Tunnel
+          # 4. Tạo file cấu hình SSH định tuyến qua Cloudflare Access kèm Service Token
           cat << 'EOF' > ~/.ssh/config
           Host ssh.namhoanglegal.com
               HostName ssh.namhoanglegal.com
               User ${{ secrets.SERVER_USER }}
               Port 22022
               IdentityFile ~/.ssh/id_rsa
-              ProxyCommand cloudflared access ssh --hostname %h
+              ProxyCommand cloudflared access ssh --hostname %h --client-id ${{ secrets.CF_ACCESS_CLIENT_ID }} --client-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
               StrictHostKeyChecking no
               UserKnownHostsFile=/dev/null
           EOF
@@ -48,5 +48,5 @@ jobs:
             git pull origin main
             docker compose up --build -d
             docker image prune -f
-            echo "🚀 Deployment completed successfully via Zero Trust Tunnel!"
+            echo "🚀 Deployment completed successfully via Zero Trust Service Token!"
           EOF
