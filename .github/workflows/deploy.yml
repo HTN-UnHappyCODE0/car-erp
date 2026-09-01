@@ -12,45 +12,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH Key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Install Cloudflared
+      - name: Setup SSH Key & Cloudflare Tunnel Proxy
         run: |
-          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-          sudo dpkg -i cloudflared.deb
-          cloudflared --version
-
-      - name: Configure SSH to use Cloudflare Tunnel Proxy
-        run: |
+          # 1. Tạo thư mục .ssh
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Cấu hình SSH client trên runner tự động định tuyến qua lệnh cloudflared access ssh
+          # 2. Giải mã Private Key từ GitHub Secret vào file id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # 3. Cài đặt cloudflared trên runner
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared.deb
+
+          # 4. Cấu hình SSH trỏ qua Cloudflare Access Tunnel
           cat << 'EOF' > ~/.ssh/config
           Host ssh.namhoanglegal.com
               User ${{ secrets.SERVER_USER }}
               Port 22022
+              IdentityFile ~/.ssh/id_rsa
               ProxyCommand cloudflared access ssh --hostname %h
               StrictHostKeyChecking no
               UserKnownHostsFile=/dev/null
           EOF
-
           chmod 600 ~/.ssh/config
 
-      - name: Deploy to Ubuntu Server via Zero Trust Tunnel
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ssh.namhoanglegal.com
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22022
-          script_stop: true
-          script: |
+      - name: Execute Deployment on Remote Server via Tunnel
+        run: |
+          # Ép lệnh ssh sử dụng đúng file cấu hình và định danh tại thư mục .ssh
+          ssh -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
             docker compose up --build -d
             docker image prune -f
-            echo "🚀 Deployment completed successfully via Zero Trust!"
+            echo "🚀 Deployment completed successfully via Zero Trust Tunnel!"
+          EOF
