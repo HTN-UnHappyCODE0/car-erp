@@ -1,6 +1,6 @@
 name: Deploy Car ERP to Production
 
-# Kích hoạt tự động mỗi khi có lệnh push lên nhánh main
+# Kích hoạt tự động mỗi khi có code mới đẩy lên nhánh main
 on:
   push:
     branches: [main]
@@ -15,7 +15,7 @@ jobs:
 
       - name: Setup SSH Key & Cloudflare Zero Trust Tunnel
         run: |
-          # 1. Tạo thư mục bảo mật cho SSH
+          # 1. Tạo thư mục bảo mật cho cấu hình SSH
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
@@ -23,7 +23,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # 3. Tải và cài đặt công cụ cloudflared chính hãng
+          # 3. Tải và cài đặt công cụ cloudflared để mở đường hầm
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Execute Deployment on Remote Server via Tunnel
         run: |
-          # 5. Gọi lệnh ssh (sử dụng cờ -T để tránh lỗi tty) thông qua file cấu hình để thực thi lệnh deploy
+          # 5. Gọi lệnh ssh (với cờ -T) qua file cấu hình để thực thi lệnh deploy trên server Ubuntu
           ssh -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
