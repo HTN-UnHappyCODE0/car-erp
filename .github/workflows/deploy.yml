@@ -1,6 +1,5 @@
 name: Deploy Car ERP to Production
 
-# Kích hoạt tự động mỗi khi có code mới đẩy lên nhánh main
 on:
   push:
     branches: [main]
@@ -24,26 +23,37 @@ jobs:
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
 
-          # ĐÃ SỬA CÚ PHÁP THAM SỐ THÀNH --service-token-id VÀ --service-token-secret
           cat << 'EOF' > ~/.ssh/config
           Host ssh.namhoanglegal.com
-            HostName ssh.namhoanglegal.com
-            User ${{ secrets.SERVER_USER }}
-            Port 22
-            IdentityFile ~/.ssh/id_rsa
-            ProxyCommand cloudflared access ssh --hostname %h --service-token-id ${{ secrets.CF_ACCESS_CLIENT_ID }} --service-token-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
-            StrictHostKeyChecking no
-            UserKnownHostsFile=/dev/null
+              HostName ssh.namhoanglegal.com
+              User ${{ secrets.SERVER_USER }}
+              Port 22
+              IdentityFile ~/.ssh/id_rsa
+              ProxyCommand cloudflared access ssh --hostname %h --service-token-id ${{ secrets.CF_ACCESS_CLIENT_ID }} --service-token-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+              StrictHostKeyChecking no
+              UserKnownHostsFile=/dev/null
           EOF
           chmod 600 ~/.ssh/config
 
       - name: Execute Deployment on Remote Server via Tunnel
         run: |
-          # Đã thêm cờ -vvv để soi chi tiết tiến trình kết nối
-          ssh -vvv -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
+          ssh -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
             docker compose up --build -d
             docker image prune -f
-            echo "🚀 Deployment completed successfully via Zero Trust Service Token!"
           EOF
+
+      # KHỐI MỚI: GỬI THÔNG BÁO TELEGRAM
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        if: always() # Bắt buộc chạy khối này dù quá trình deploy thành công hay thất bại
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚀 Cập nhật hệ thống Car ERP!
+            Trạng thái: ${{ job.status }}
+            Nhánh: ${{ github.ref_name }}
+            Người push code: ${{ github.actor }}
+            Message: ${{ github.event.commits[0].message }}
