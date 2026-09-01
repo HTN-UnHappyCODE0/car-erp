@@ -46,6 +46,7 @@ jobs:
           host: ssh.namhoanglegal.com
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22022
           script_stop: true
           script: |
             cd ~/car-erp
