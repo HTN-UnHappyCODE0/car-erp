@@ -1,5 +1,6 @@
 name: Deploy Car ERP to Production
 
+# Kích hoạt tự động mỗi khi có lệnh push lên nhánh main
 on:
   push:
     branches: [main]
@@ -14,25 +15,26 @@ jobs:
 
       - name: Setup SSH Key & Cloudflare Tunnel Proxy
         run: |
-          # 1. Tạo thư mục .ssh
+          # 1. Tạo thư mục bảo mật cho SSH
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # 2. Giải mã Private Key từ GitHub Secret vào file id_rsa
+          # 2. Đưa Private Key từ GitHub Secret vào file định danh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # 3. Cài đặt cloudflared trên runner
+          # 3. Tải và cài đặt công cụ cloudflared chính hãng
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
 
-          # 4. Cấu hình SSH trỏ qua Cloudflare Access Tunnel
+          # 4. Tạo file cấu hình SSH định tuyến qua Cloudflare Access Tunnel
           cat << 'EOF' > ~/.ssh/config
           Host ssh.namhoanglegal.com
+              HostName ssh.namhoanglegal.com
               User ${{ secrets.SERVER_USER }}
               Port 22022
               IdentityFile ~/.ssh/id_rsa
-              ProxyCommand cloudflared access ssh --hostname %h
+              ProxyCommand cloudflared access ssh --hostname ssh.namhoanglegal.com
               StrictHostKeyChecking no
               UserKnownHostsFile=/dev/null
           EOF
@@ -40,7 +42,7 @@ jobs:
 
       - name: Execute Deployment on Remote Server via Tunnel
         run: |
-          # Ép lệnh ssh sử dụng đúng file cấu hình và định danh tại thư mục .ssh
+          # 5. Gọi lệnh ssh sử dụng file cấu hình để thực thi lệnh deploy trên server
           ssh -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
             cd ~/car-erp
             git pull origin main
