@@ -96,7 +96,7 @@ export function LoginForm() {
           <span>Bảo mật JWT & RLS</span>
         </div>
         <CardTitle className="font-heading text-xl font-bold tracking-tight text-[#202020]">
-          Cổng Xác Thực LOGIN
+          Cổng Xác Thực
         </CardTitle>
         <CardDescription className="text-xs font-normal text-[#828282]">
           Vui lòng điền thông tin tài khoản để truy cập hệ thống.
