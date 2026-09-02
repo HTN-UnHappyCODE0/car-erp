@@ -48,9 +48,6 @@ export default withSentryConfig(nextConfig, {
   project: process.env.SENTRY_PROJECT || 'car-erp-frontend',
   silent: !process.env.CI,
 
-  // Sentry Tunneling: chuyển tiếp telemetry qua chính domain carerp.namhoanglegal.com để tránh bị AdBlocker chặn
-  tunnelRoute: '/monitoring-tunnel',
-
   // Không làm fail build nếu thiếu auth token
   telemetry: false,
 

@@ -24,7 +24,7 @@ export function SettingsView() {
   const [sentryBeStatus, setSentryBeStatus] = useState<string | null>(null);
   const sentryDsnConfigured = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-  const handleTestSentryFE = () => {
+  const handleTestSentryFE = async () => {
     const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
     if (!dsn) {
       setSentryFeStatus('⚠️ CẢNH BÁO: NEXT_PUBLIC_SENTRY_DSN đang bị TRỐNG trên trình duyệt! Cần thêm biến NEXT_PUBLIC_SENTRY_DSN vào lúc build Docker Frontend.');
@@ -32,18 +32,36 @@ export function SettingsView() {
     }
 
     try {
-      setSentryFeStatus('Đang gửi lỗi thử nghiệm lên Sentry Frontend...');
-      throw new Error('Test Sentry Frontend Error từ Car ERP Settings View!');
+      setSentryFeStatus('Đang gửi sự kiện lỗi lên Sentry...');
+      const eventId = Sentry.captureException(
+        new Error('Test Sentry Frontend Error từ Car ERP Settings View!'),
+        {
+          tags: {
+            test: 'true',
+            user: user?.username || 'anonymous',
+            environment: process.env.NODE_ENV || 'production',
+          },
+        }
+      );
+
+      console.log('[Sentry Test Event ID]:', eventId);
+
+      // Đảm bảo xả hàng đợi gửi lên máy chủ Sentry
+      const flushed = await Sentry.flush(3000);
+      console.log('[Sentry Test Flush Status]:', flushed);
+
+      setSentryFeStatus(`✅ Đã gửi thành công lên Sentry! Mã Event ID: ${eventId} (Flush: ${flushed ? 'OK' : 'Queued'})`);
     } catch (err) {
-      Sentry.captureException(err, {
-        tags: {
-          test: 'true',
-          user: user?.username || 'anonymous',
-          environment: process.env.NODE_ENV || 'production',
-        },
-      });
-      setSentryFeStatus('✅ Đã gửi 1 lỗi lên Sentry Frontend (car-erp-frontend) thành công! Hãy kiểm tra tab Issues trên Sentry.');
+      setSentryFeStatus(`❌ Lỗi khi gửi Sentry: ${(err as Error).message}`);
     }
+  };
+
+  const handleTriggerUncaughtError = () => {
+    setSentryFeStatus('⚡ Đang kích hoạt Uncaught Crash (myUndefinedFunction)... Hãy kiểm tra F12 Console & Sentry!');
+    setTimeout(() => {
+      // @ts-expect-error Kích hoạt lỗi theo khuyến nghị của tài liệu Sentry
+      window.myUndefinedFunction();
+    }, 150);
   };
 
   const handleTestSentryBE = async () => {
@@ -264,19 +282,29 @@ export function SettingsView() {
                   </div>
                   <p className="text-[11px] text-[#828282] mt-0.5">Gửi Exception từ trình duyệt</p>
                 </div>
-                <Button
-                  variant="brand"
-                  size="sm"
-                  onClick={handleTestSentryFE}
-                  className="gap-1.5 rounded-xl shadow-xs"
-                >
-                  <Send className="h-3.5 w-3.5" /> Bắn Lỗi FE
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="brand"
+                    size="sm"
+                    onClick={handleTestSentryFE}
+                    className="gap-1.5 rounded-xl shadow-xs"
+                  >
+                    <Send className="h-3.5 w-3.5" /> Bắn Lỗi FE
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTriggerUncaughtError}
+                    className="gap-1.5 rounded-xl border-rose-300 text-rose-700 hover:bg-rose-50"
+                  >
+                    <Bug className="h-3.5 w-3.5" /> Crash Hàm
+                  </Button>
+                </div>
               </div>
               {sentryFeStatus && (
                 <div className={`p-2.5 rounded-xl border text-[11px] font-medium flex items-center gap-1.5 ${sentryFeStatus.startsWith('⚠️') ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
                   {sentryFeStatus.startsWith('⚠️') ? <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" /> : <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />}
-                  <span>{sentryFeStatus}</span>
+                  <span className="font-mono">{sentryFeStatus}</span>
                 </div>
               )}
             </div>
