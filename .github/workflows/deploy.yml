@@ -1,17 +1,53 @@
-name: Deploy Car ERP to Production
+name: CI/CD Pipeline - Car ERP Production
 
 on:
   push:
     branches: [main]
+  workflow_dispatch: # Cho phép kích hoạt deploy thủ công từ giao diện GitHub
 
 jobs:
-  deploy:
+  # =========================================================================
+  # JOB 1: KIỂM THỬ VÀ VALIDATE TRƯỚC (CHỐNG LỖI LÀM SẬP PRODUCTION)
+  # =========================================================================
+  ci:
+    name: 🧪 CI Test & Build Validation
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Go 1.24
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache-dependency-path: BE/go.sum
+
+      - name: Run Backend Unit Tests (Go)
+        run: |
+          cd BE
+          go test -v ./...
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: FE/package-lock.json
+
+      - name: Verify Frontend Build (Next.js)
+        run: |
+          cd FE
+          npm ci --legacy-peer-deps
+          npm run build
+
+  # =========================================================================
+  # JOB 2: DEPLOY LÊN PRODUCTION SERVER QUA CLOUDFLARE ZERO TRUST TUNNEL
+  # =========================================================================
+  deploy:
+    name: 🚀 Deploy to Production Server
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
       - name: Setup SSH Key & Cloudflare Zero Trust Tunnel
         run: |
           mkdir -p ~/.ssh
@@ -35,25 +71,45 @@ jobs:
           EOF
           chmod 600 ~/.ssh/config
 
-      - name: Execute Deployment on Remote Server via Tunnel
+      - name: Execute Deployment on Remote Server
         run: |
           ssh -T -F ~/.ssh/config ssh.namhoanglegal.com << 'EOF'
+            set -euo pipefail
+
+            echo "[Deploy] Di chuyển vào thư mục dự án..."
             cd ~/car-erp
+
+            echo "[Deploy] Pull mã nguồn mới nhất từ main..."
             git pull origin main
+
+            echo "[Deploy] Rebuild và cập nhật các container..."
             docker compose up --build -d
+
+            echo "[Deploy] Dọn dẹp Docker images cũ..."
             docker image prune -f
+
+            echo "[Deploy] Hoàn tất cập nhật container thành công!"
           EOF
 
-      # KHỐI MỚI: GỬI THÔNG BÁO TELEGRAM
+      - name: Verify Backend Health Check
+        run: |
+          echo "Đang kiểm tra phản hồi thực tế của Backend API..."
+          sleep 5
+          curl --fail --retry 5 --retry-delay 3 --retry-connrefused https://api-carerp.namhoanglegal.com/health || exit 1
+          echo "Backend đã phản hồi Healthy 200 OK!"
+
+      # GỬI THÔNG BÁO TELEGRAM CHI TIẾT
       - name: Send Telegram Notification
         uses: appleboy/telegram-action@master
-        if: always() # Bắt buộc chạy khối này dù quá trình deploy thành công hay thất bại
+        if: always()
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🚀 Cập nhật hệ thống Car ERP!
-            Trạng thái: ${{ job.status }}
-            Nhánh: ${{ github.ref_name }}
-            Người push code: ${{ github.actor }}
-            Message: ${{ github.event.commits[0].message }}
+            ${{ job.status == 'success' && '✅ DEPLOY CAR ERP THÀNH CÔNG!' || '❌ DEPLOY CAR ERP THẤT BẠI!' }}
+            ━━━━━━━━━━━━━━━━━━━
+            🔹 Trạng thái: ${{ job.status }}
+            🔹 Nhánh: ${{ github.ref_name }}
+            🔹 Tác giả: ${{ github.actor }}
+            🔹 Commit: ${{ github.event.head_commit.message || github.sha }}
+            🔹 Xem chi tiết log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
