@@ -172,7 +172,7 @@ export function DashboardView() {
                         {order.status}
                       </Badge>
                     </div>
-                    <p className="text-[11px] text-[#828282] font-medium">
+                    <p suppressHydrationWarning className="text-[11px] text-[#828282] font-medium">
                       Ngày tạo: {formatDate(order.created_at)}
                     </p>
                   </div>

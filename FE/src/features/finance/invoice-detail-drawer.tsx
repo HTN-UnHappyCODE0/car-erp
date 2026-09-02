@@ -80,7 +80,7 @@ export function InvoiceDetailDrawer({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/50 p-3.5 text-xs">
             <div>
               <span className="text-[10px] uppercase font-semibold text-slate-400 block">Ngày Phát Hành</span>
-              <div className="mt-0.5 flex items-center gap-1 font-medium text-slate-800">
+              <div suppressHydrationWarning className="mt-0.5 flex items-center gap-1 font-medium text-slate-800">
                 <Calendar className="h-3.5 w-3.5 text-slate-400" />
                 {formatDate(invoice.issued_date)}
               </div>
@@ -88,7 +88,7 @@ export function InvoiceDetailDrawer({
 
             <div>
               <span className="text-[10px] uppercase font-semibold text-slate-400 block">Hạn Thanh Toán</span>
-              <div className="mt-0.5 flex items-center gap-1 font-medium text-rose-600">
+              <div suppressHydrationWarning className="mt-0.5 flex items-center gap-1 font-medium text-rose-600">
                 <Clock className="h-3.5 w-3.5" />
                 {formatDate(invoice.due_date)}
               </div>
@@ -152,7 +152,7 @@ export function InvoiceDetailDrawer({
                             {tx.payment_method}
                           </Badge>
                         </div>
-                        <span className="text-[11px] text-slate-400">
+                        <span suppressHydrationWarning className="text-[11px] text-slate-400 font-mono">
                           {formatDateTime(tx.transaction_date)}
                         </span>
                       </div>

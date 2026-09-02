@@ -112,7 +112,7 @@ export function RepairOrderDetailDialog({
 
             <div>
               <span className="text-[10px] uppercase font-semibold text-slate-400 block">Ngày Tiếp Nhận</span>
-              <div className="mt-0.5 text-slate-600 flex items-center gap-1">
+              <div suppressHydrationWarning className="mt-0.5 text-slate-600 flex items-center gap-1 font-mono">
                 <Calendar className="h-3.5 w-3.5 text-slate-400" />
                 {formatDate(order.created_at)}
               </div>

@@ -41,8 +41,10 @@ import {
   Home,
   Check,
   Settings,
+  Globe,
 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { getUserTimeZone, getUserTimezoneOffsetFormatted } from '@/shared/lib/date-time';
 
 const roleLabels: Record<string, { label: string; color: string }> = {
   superadmin:      { label: 'Giám Đốc',     color: 'text-[#202020]' },
@@ -73,6 +75,14 @@ export function AppHeader() {
   };
 
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [deviceTzInfo, setDeviceTzInfo] = useState({ tz: 'Asia/Ho_Chi_Minh', offset: 'GMT+7' });
+
+  React.useEffect(() => {
+    setDeviceTzInfo({
+      tz: getUserTimeZone(),
+      offset: getUserTimezoneOffsetFormatted(),
+    });
+  }, []);
 
   const handleLogoutConfirm = () => {
     logout();
@@ -134,8 +144,19 @@ export function AppHeader() {
           </nav>
         </div>
 
-        {/* Right: Branch Selector & Profile */}
+        {/* Right: Timezone Indicator, Branch Selector & Profile */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Device Timezone Indicator */}
+          <div
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f7f7f7] border border-[#e8e8e8] text-[11px] text-[#666] shadow-2xs hover:bg-[#efefef] transition-colors cursor-default"
+            title={`Múi giờ thiết bị: ${deviceTzInfo.tz} (${deviceTzInfo.offset}) - Tự động đồng bộ`}
+          >
+            <Globe className="h-3 w-3 text-[#828282]" />
+            <span suppressHydrationWarning className="font-mono font-medium text-[#202020]">
+              {deviceTzInfo.offset}
+            </span>
+          </div>
+
           {/* Branch Switcher Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -202,7 +223,7 @@ export function AppHeader() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-52 rounded-2xl border border-[#e8e8e8] bg-white p-1.5 shadow-xl"
+              className="w-56 rounded-2xl border border-[#e8e8e8] bg-white p-1.5 shadow-xl"
             >
               <div className="px-3 py-2.5 border-b border-[#e8e8e8] mb-1">
                 <div className="flex items-center gap-2.5">
@@ -217,6 +238,15 @@ export function AppHeader() {
                       {roleInfo.label}
                     </p>
                   </div>
+                </div>
+                {/* Timezone Info in User Menu */}
+                <div className="mt-2 pt-2 border-t border-[#f0f0f0] flex items-center justify-between text-[10px] text-[#828282]">
+                  <span className="flex items-center gap-1">
+                    <Globe className="h-3 w-3" /> Múi giờ thiết bị:
+                  </span>
+                  <span suppressHydrationWarning className="font-mono font-bold text-[#202020]">
+                    {deviceTzInfo.offset}
+                  </span>
                 </div>
               </div>
               <DropdownMenuItem onClick={() => router.push('/settings')} className="text-xs cursor-pointer gap-2.5 py-2 px-3 rounded-xl hover:bg-[#efefef] text-[#202020]">

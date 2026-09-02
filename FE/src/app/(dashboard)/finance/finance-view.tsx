@@ -135,7 +135,11 @@ export function FinanceView() {
     {
       header: 'Hạn Thanh Toán',
       accessorKey: 'due_date',
-      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.due_date)}</span>,
+      cell: (row) => (
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDate(row.due_date)}
+        </span>
+      ),
     },
     {
       header: 'Thao Tác Kế Toán',
@@ -201,7 +205,9 @@ export function FinanceView() {
       header: 'Thời Gian Giao Dịch',
       accessorKey: 'transaction_date',
       cell: (row) => (
-        <span className="text-xs text-[#828282] font-mono">{formatDateTime(row.transaction_date)}</span>
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDateTime(row.transaction_date)}
+        </span>
       ),
     },
     {

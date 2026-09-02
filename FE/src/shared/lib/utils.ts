@@ -1,11 +1,23 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { format, isValid, parseISO } from 'date-fns';
 import DOMPurify from 'isomorphic-dompurify';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+// Re-export toàn bộ module date-time theo chuẩn múi giờ thiết bị người dùng
+export {
+  getUserTimeZone,
+  getUserTimezoneOffsetFormatted,
+  parseDateSafe,
+  formatDateTime,
+  formatDate,
+  formatTime,
+  formatDateTimeWithZone,
+  formatRelativeTime,
+  type FormatDateOptions,
+} from './date-time';
 
 /**
  * Định dạng tiền tệ VND chuẩn Việt Nam (ví dụ: 1.250.000.000 ₫)
@@ -20,26 +32,6 @@ export function formatVND(amount: number | string | undefined | null): string {
     currency: 'VND',
     maximumFractionDigits: 0,
   }).format(num);
-}
-
-/**
- * Định dạng ngày tháng năm giờ phút (VD: 25/08/2026 14:30)
- */
-export function formatDateTime(dateStr: string | Date | undefined | null): string {
-  if (!dateStr) return '-';
-  const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
-  if (!isValid(date)) return '-';
-  return format(date, 'dd/MM/yyyy HH:mm');
-}
-
-/**
- * Định dạng ngày (VD: 25/08/2026)
- */
-export function formatDate(dateStr: string | Date | undefined | null): string {
-  if (!dateStr) return '-';
-  const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
-  if (!isValid(date)) return '-';
-  return format(date, 'dd/MM/yyyy');
 }
 
 /**

@@ -74,7 +74,7 @@ export function VehicleHistoryDrawer({
                     {/* Header: Date, ODO, Status */}
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">
+                        <div suppressHydrationWarning className="flex items-center gap-1 text-xs font-semibold text-slate-800 font-mono">
                           <Calendar className="h-3.5 w-3.5 text-slate-400" />
                           {formatDate(order.created_at)}
                         </div>

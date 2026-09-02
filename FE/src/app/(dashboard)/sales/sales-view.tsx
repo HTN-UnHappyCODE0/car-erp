@@ -144,7 +144,11 @@ export function SalesView() {
     {
       header: 'Ngày Ký Kết',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => (
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDate(row.created_at)}
+        </span>
+      ),
     },
     {
       header: 'Quy Trình & Thao Tác',

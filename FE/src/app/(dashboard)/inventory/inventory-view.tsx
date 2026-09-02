@@ -162,7 +162,9 @@ export function InventoryView() {
       header: 'Ngày Nhập Kho',
       accessorKey: 'created_at',
       cell: (row) => (
-        <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDate(row.created_at)}
+        </span>
       ),
     },
     {

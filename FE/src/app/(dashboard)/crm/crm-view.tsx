@@ -222,7 +222,11 @@ export function CRMView() {
     {
       header: 'Thời Gian Tiếp Nhận',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => (
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDate(row.created_at)}
+        </span>
+      ),
     },
     {
       header: 'Thao Tác',
@@ -295,7 +299,11 @@ export function CRMView() {
     {
       header: 'Ngày Tạo',
       accessorKey: 'created_at',
-      cell: (row) => <span className="text-xs text-[#828282] font-mono">{formatDate(row.created_at)}</span>,
+      cell: (row) => (
+        <span suppressHydrationWarning className="text-xs text-[#828282] font-mono">
+          {formatDate(row.created_at)}
+        </span>
+      ),
     },
   ];
 
@@ -472,7 +480,7 @@ export function CRMView() {
                               <h5 className="text-xs font-bold text-[#202020] group-hover:text-[#ff682c] transition-colors">
                                 {lead.customer_name || 'Khách hàng mới'}
                               </h5>
-                              <span className="text-[10px] text-[#828282] flex items-center gap-0.5 font-mono">
+                              <span suppressHydrationWarning className="text-[10px] text-[#828282] flex items-center gap-0.5 font-mono">
                                 <Clock className="h-2.5 w-2.5" />
                                 {formatDate(lead.created_at)}
                               </span>
