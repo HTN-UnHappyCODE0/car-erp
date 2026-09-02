@@ -2,6 +2,14 @@ import * as Sentry from '@sentry/nextjs';
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
+if (typeof window !== 'undefined') {
+  if (SENTRY_DSN) {
+    console.log('[Sentry Client] Đã kích hoạt giám sát Frontend với DSN:', SENTRY_DSN.substring(0, 20) + '...');
+  } else {
+    console.warn('[Sentry Client] NEXT_PUBLIC_SENTRY_DSN chưa được cấu hình. Sentry Client đang ở chế độ Disabled.');
+  }
+}
+
 Sentry.init({
   dsn: SENTRY_DSN,
   enabled: !!SENTRY_DSN,

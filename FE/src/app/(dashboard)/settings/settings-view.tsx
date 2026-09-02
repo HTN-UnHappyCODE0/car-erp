@@ -22,8 +22,15 @@ export function SettingsView() {
 
   const [sentryFeStatus, setSentryFeStatus] = useState<string | null>(null);
   const [sentryBeStatus, setSentryBeStatus] = useState<string | null>(null);
+  const sentryDsnConfigured = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 
   const handleTestSentryFE = () => {
+    const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+    if (!dsn) {
+      setSentryFeStatus('⚠️ CẢNH BÁO: NEXT_PUBLIC_SENTRY_DSN đang bị TRỐNG trên trình duyệt! Cần thêm biến NEXT_PUBLIC_SENTRY_DSN vào lúc build Docker Frontend.');
+      return;
+    }
+
     try {
       setSentryFeStatus('Đang gửi lỗi thử nghiệm lên Sentry Frontend...');
       throw new Error('Test Sentry Frontend Error từ Car ERP Settings View!');
@@ -249,7 +256,12 @@ export function SettingsView() {
             <div className="p-4 rounded-xl border border-[#e8e8e8] bg-white space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-xs text-[#202020]">1. Dự Án Frontend (car-erp-frontend)</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-bold text-xs text-[#202020]">1. Dự Án Frontend (car-erp-frontend)</h4>
+                    <span suppressHydrationWarning className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-mono ${sentryDsnConfigured ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                      {sentryDsnConfigured ? '🟢 DSN Sẵn Sàng' : '🔴 DSN Chưa Nhúng'}
+                    </span>
+                  </div>
                   <p className="text-[11px] text-[#828282] mt-0.5">Gửi Exception từ trình duyệt</p>
                 </div>
                 <Button
@@ -262,8 +274,8 @@ export function SettingsView() {
                 </Button>
               </div>
               {sentryFeStatus && (
-                <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-medium flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                <div className={`p-2.5 rounded-xl border text-[11px] font-medium flex items-center gap-1.5 ${sentryFeStatus.startsWith('⚠️') ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
+                  {sentryFeStatus.startsWith('⚠️') ? <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" /> : <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />}
                   <span>{sentryFeStatus}</span>
                 </div>
               )}

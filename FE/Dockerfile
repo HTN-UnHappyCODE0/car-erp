@@ -11,7 +11,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Biến môi trường lúc build (nếu cần thiết cho public runtime)
+# Tiếp nhận biến build-time từ Docker build context / compose
+ARG NEXT_PUBLIC_SENTRY_DSN
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
