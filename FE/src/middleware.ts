@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 // Danh sách các route công khai không cần đăng nhập
-const PUBLIC_ROUTES = ['/login', '/favicon.ico', '/robots.txt'];
+const PUBLIC_ROUTES = ['/login', '/sentry-example-page', '/favicon.ico', '/robots.txt'];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
