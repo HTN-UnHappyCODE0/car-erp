@@ -44,8 +44,8 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(nextConfig, {
   // Tùy chọn Sentry Webpack Plugin
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+  org: process.env.SENTRY_ORG || 'nam-5i',
+  project: process.env.SENTRY_PROJECT || 'car-erp-frontend',
   silent: !process.env.CI,
 
   // Không làm fail build nếu thiếu auth token
