@@ -1,5 +1,8 @@
 'use client';
 
+// Khởi tạo Sentry SDK trên Client Browser cho toàn bộ ứng dụng
+import '../../sentry.client.config';
+
 import React, { useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
