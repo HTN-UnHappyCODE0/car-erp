@@ -12,11 +12,48 @@ import {
   getUserTimeZone,
   getUserTimezoneOffsetFormatted,
 } from '@/shared/lib/utils';
-import { Settings, Building2, User, ShieldCheck, Globe, Clock, CheckCircle2 } from 'lucide-react';
+import { Settings, Building2, User, ShieldCheck, Globe, Clock, CheckCircle2, Bug, Send, AlertCircle } from 'lucide-react';
+import * as Sentry from '@sentry/nextjs';
+import { Button } from '@/shared/components/ui/button';
 
 export function SettingsView() {
   const { data: branches = [], isLoading } = useBranches();
   const user = useAuthStore((s) => s.user);
+
+  const [sentryFeStatus, setSentryFeStatus] = useState<string | null>(null);
+  const [sentryBeStatus, setSentryBeStatus] = useState<string | null>(null);
+
+  const handleTestSentryFE = () => {
+    try {
+      setSentryFeStatus('Đang gửi lỗi thử nghiệm lên Sentry Frontend...');
+      throw new Error('Test Sentry Frontend Error từ Car ERP Settings View!');
+    } catch (err) {
+      Sentry.captureException(err, {
+        tags: {
+          test: 'true',
+          user: user?.username || 'anonymous',
+          environment: process.env.NODE_ENV || 'production',
+        },
+      });
+      setSentryFeStatus('✅ Đã gửi 1 lỗi lên Sentry Frontend (car-erp-frontend) thành công! Hãy kiểm tra tab Issues trên Sentry.');
+    }
+  };
+
+  const handleTestSentryBE = async () => {
+    setSentryBeStatus('Đang gọi API /api/v1/sentry-debug trên Backend...');
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-carerp.namhoanglegal.com/api/v1';
+      const res = await fetch(`${apiUrl}/sentry-debug`);
+      const data = await res.json();
+      if (data.success) {
+        setSentryBeStatus('✅ Backend phản hồi: Đã gửi 1 sự kiện lỗi lên Sentry Backend (car-erp-backend) thành công!');
+      } else {
+        setSentryBeStatus(`⚠️ Backend phản hồi: ${JSON.stringify(data)}`);
+      }
+    } catch (err) {
+      setSentryBeStatus(`❌ Không thể gọi backend: ${(err as Error).message}`);
+    }
+  };
 
   const [deviceInfo, setDeviceInfo] = useState({
     timeZone: 'Asia/Ho_Chi_Minh',
@@ -99,7 +136,7 @@ export function SettingsView() {
           Cài Đặt Hệ Thống & Phân Quyền Chi Nhánh
         </h2>
         <p className="text-xs text-[#828282] mt-1">
-          Quản lý danh sách showroom chi nhánh, cấu hình múi giờ hiển thị và phân quyền tài khoản RBAC.
+          Quản lý danh sách showroom chi nhánh, cấu hình múi giờ hiển thị, giám sát Sentry và phân quyền tài khoản RBAC.
         </p>
       </div>
 
@@ -188,6 +225,76 @@ export function SettingsView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Sentry Monitoring & Test Card */}
+      <Card className="border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
+        <CardHeader className="pb-3 border-b border-[#e8e8e8] bg-[#fafafa]">
+          <CardTitle className="text-sm font-bold flex items-center justify-between text-[#202020]">
+            <div className="flex items-center gap-2">
+              <Bug className="h-4 w-4 text-rose-500" />
+              Kiểm Tra Giám Sát Lỗi Sentry (Observability & APM)
+            </div>
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#efefef] text-[#202020]">
+              Sentry Diagnostic
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4 sm:p-5 space-y-4 text-xs">
+          <p className="text-[#828282]">
+            Sử dụng 2 nút bấm bên dưới để gửi sự kiện lỗi thử nghiệm lên 2 dự án tương ứng trên Sentry Dashboard.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Sentry FE Box */}
+            <div className="p-4 rounded-xl border border-[#e8e8e8] bg-white space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-xs text-[#202020]">1. Dự Án Frontend (car-erp-frontend)</h4>
+                  <p className="text-[11px] text-[#828282] mt-0.5">Gửi Exception từ trình duyệt</p>
+                </div>
+                <Button
+                  variant="brand"
+                  size="sm"
+                  onClick={handleTestSentryFE}
+                  className="gap-1.5 rounded-xl shadow-xs"
+                >
+                  <Send className="h-3.5 w-3.5" /> Bắn Lỗi FE
+                </Button>
+              </div>
+              {sentryFeStatus && (
+                <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-medium flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                  <span>{sentryFeStatus}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Sentry BE Box */}
+            <div className="p-4 rounded-xl border border-[#e8e8e8] bg-white space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-xs text-[#202020]">2. Dự Án Backend (car-erp-backend)</h4>
+                  <p className="text-[11px] text-[#828282] mt-0.5">Gọi API /api/v1/sentry-debug</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestSentryBE}
+                  className="gap-1.5 rounded-xl border-[#202020] text-[#202020] hover:bg-[#efefef]"
+                >
+                  <Bug className="h-3.5 w-3.5" /> Bắn Lỗi BE
+                </Button>
+              </div>
+              {sentryBeStatus && (
+                <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-medium flex items-center gap-1.5">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-blue-600" />
+                  <span>{sentryBeStatus}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Branches Table */}
       <Card className="border border-[#e8e8e8] bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(32,32,32,0.02)]">
