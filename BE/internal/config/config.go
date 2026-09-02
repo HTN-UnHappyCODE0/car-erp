@@ -19,6 +19,15 @@ type Config struct {
 	RefreshTokenDuration time.Duration
 	CORSAllowedOrigins   []string
 	Database             DatabaseConfig
+	Sentry               SentryConfig
+}
+
+// SentryConfig chứa cấu hình giám sát lỗi và APM Sentry
+type SentryConfig struct {
+	DSN              string
+	Environment      string
+	TracesSampleRate float64
+	AttachStacktrace bool
 }
 
 // DatabaseConfig chứa cấu hình kết nối và connection pool PostgreSQL
@@ -75,6 +84,12 @@ func LoadConfig() *Config {
 			HealthCheckPeriod: getEnvAsDuration("DB_HEALTH_CHECK_PERIOD", 1*time.Minute),
 			ConnectTimeout:    getEnvAsDuration("DB_CONNECT_TIMEOUT", 5*time.Second),
 		},
+		Sentry: SentryConfig{
+			DSN:              getEnv("SENTRY_DSN", ""),
+			Environment:      getEnv("SENTRY_ENVIRONMENT", env),
+			TracesSampleRate: getEnvAsFloat64("SENTRY_TRACES_SAMPLE_RATE", 1.0),
+			AttachStacktrace: true,
+		},
 	}
 }
 
@@ -95,6 +110,18 @@ func getEnvAsInt32(key string, fallback int32) int32 {
 		return fallback
 	}
 	return int32(val)
+}
+
+func getEnvAsFloat64(key string, fallback float64) float64 {
+	valStr := os.Getenv(key)
+	if valStr == "" {
+		return fallback
+	}
+	val, err := strconv.ParseFloat(valStr, 64)
+	if err != nil {
+		return fallback
+	}
+	return val
 }
 
 func getEnvAsDuration(key string, fallback time.Duration) time.Duration {

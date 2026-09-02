@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs/config';
 
 const securityHeaders = [
   {
@@ -29,7 +30,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-
   output: 'standalone',
 
   async headers() {
@@ -42,4 +42,17 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Tùy chọn Sentry Webpack Plugin
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: !process.env.CI,
+
+  // Không làm fail build nếu thiếu auth token
+  telemetry: false,
+
+  // Tự động ẩn sourcemaps khỏi client bundle để bảo mật
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+});

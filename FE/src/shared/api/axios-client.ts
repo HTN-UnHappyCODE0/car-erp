@@ -1,4 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import * as Sentry from '@sentry/nextjs';
 import { API_BASE_URL } from '@/shared/config/constants';
 import { useAuthStore } from '@/shared/store/auth-store';
 
@@ -43,6 +44,11 @@ axiosClient.interceptors.response.use(
   (response) => response.data,
   async (error: AxiosError) => {
     if (!error.response) {
+      Sentry.addBreadcrumb({
+        category: 'network',
+        message: 'Network error connecting to Backend API',
+        level: 'warning',
+      });
       return Promise.reject(
         new Error('Không thể kết nối đến máy chủ ERP Go. Vui lòng kiểm tra kết nối mạng.')
       );
@@ -52,6 +58,20 @@ axiosClient.interceptors.response.use(
     const originalRequest = config as InternalAxiosRequestConfig & { _retry?: boolean };
     const isAuthLogin = originalRequest?.url?.includes('/auth/login');
     const isAuthRenew = originalRequest?.url?.includes('/auth/renew');
+
+    // Ghi nhận breadcrumb lỗi API vào Sentry
+    if (status >= 500) {
+      Sentry.addBreadcrumb({
+        category: 'api',
+        message: `API Error ${status} on ${originalRequest?.url}`,
+        level: 'error',
+        data: {
+          url: originalRequest?.url,
+          method: originalRequest?.method,
+          status,
+        },
+      });
+    }
 
     // Nếu lỗi 401 và không phải đang login hay đang renew
     if (status === 401 && !isAuthLogin && !isAuthRenew && !originalRequest._retry) {

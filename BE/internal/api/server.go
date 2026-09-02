@@ -13,6 +13,7 @@ import (
 	"erp-backend/internal/config"
 	"erp-backend/internal/database"
 	"erp-backend/internal/logger"
+	"erp-backend/internal/sentryutil"
 	"erp-backend/internal/token"
 
 	"github.com/gin-gonic/gin"
@@ -53,6 +54,7 @@ func (server *Server) setupRouter() {
 	// 1. Global Middlewares (CORSMiddleware phải chạy đầu tiên để chặn và phản hồi Preflight OPTIONS)
 	server.router.Use(middleware.CORSMiddleware(server.config.CORSAllowedOrigins))
 	server.router.Use(logger.StructuredLoggerMiddleware(server.slogger))
+	server.router.Use(sentryutil.SentryMiddleware())
 	server.router.Use(middleware.SecurityHeadersMiddleware())
 	server.router.Use(gin.Recovery())
 

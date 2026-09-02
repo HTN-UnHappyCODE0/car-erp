@@ -14,6 +14,7 @@ import (
 	"erp-backend/internal/api"
 	"erp-backend/internal/config"
 	"erp-backend/internal/database"
+	"erp-backend/internal/sentryutil"
 	"erp-backend/internal/token"
 )
 
@@ -21,6 +22,12 @@ func main() {
 	// 1. Tải cấu hình hệ thống
 	cfg := config.LoadConfig()
 	log.Printf("[Server] Khởi động hệ thống Car ERP Backend (Môi trường: %s)...", cfg.Environment)
+
+	// 1.1 Khởi tạo Sentry giám sát lỗi
+	if _, err := sentryutil.InitSentry(cfg.Sentry); err != nil {
+		log.Printf("[Server] Cảnh báo: %v", err)
+	}
+	defer sentryutil.Flush(2 * time.Second)
 
 	// 2. Khởi tạo PostgreSQL Connection Pool (pgxpool)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
