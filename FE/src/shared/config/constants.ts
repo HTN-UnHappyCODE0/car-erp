@@ -1,10 +1,25 @@
 const getApiBaseUrl = (): string => {
-  const raw = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
-  const clean = raw.trim().replace(/\/+$/, '');
-  if (clean.endsWith('/api/v1')) {
-    return clean;
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && envUrl.trim() !== '' && envUrl.trim() !== 'undefined') {
+    const clean = envUrl.trim().replace(/\/+$/, '');
+    return clean.endsWith('/api/v1') ? clean : `${clean}/api/v1`;
   }
-  return `${clean}/api/v1`;
+
+  // Tự động nhận diện theo domain khi chạy trên trình duyệt (Auto-fallback an toàn)
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname.includes('namhoanglegal.com')) {
+      return 'https://api-carerp.namhoanglegal.com/api/v1';
+    }
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:8080/api/v1';
+    }
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://api-carerp.namhoanglegal.com/api/v1';
+  }
+
+  return 'http://localhost:8080/api/v1';
 };
 
 export const API_BASE_URL = getApiBaseUrl();
