@@ -41,8 +41,55 @@ type DatabaseConfig struct {
 	ConnectTimeout    time.Duration
 }
 
+// loadDotEnv tự động tìm và nạp các biến từ file .env nếu có vào môi trường tiến trình
+func loadDotEnv() {
+	// Thứ tự ưu tiên: .env.production -> .env.local -> .env
+	candidates := []string{
+		".env.production",
+		".env.local",
+		".env",
+		"/app/.env.production",
+		"/app/.env.local",
+		"/app/.env",
+		"../.env",
+		"BE/.env",
+	}
+
+	for _, path := range candidates {
+		content, err := os.ReadFile(path)
+		if err != nil {
+			continue
+		}
+
+		lines := strings.Split(string(content), "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			// Bỏ qua dòng trống hoặc dòng comment (#)
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+
+			parts := strings.SplitN(line, "=", 2)
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				val := strings.TrimSpace(parts[1])
+
+				// Xử lý loại bỏ dấu nháy đơn ' hoặc nháy kép " bọc quanh giá trị
+				val = strings.Trim(val, `"'`)
+
+				// Chỉ nạp nếu biến môi trường hệ thống chưa có (không ghi đè biến do Docker truyền vào)
+				if key != "" && os.Getenv(key) == "" {
+					os.Setenv(key, val)
+				}
+			}
+		}
+	}
+}
+
 // LoadConfig tải cấu hình từ biến môi trường với kiểm tra an ninh bắt buộc
 func LoadConfig() *Config {
+	loadDotEnv()
+
 	env := getEnv("APP_ENV", "development")
 	jwtKey := getEnv("TOKEN_SYMMETRIC_KEY", DefaultDevJWTKey)
 

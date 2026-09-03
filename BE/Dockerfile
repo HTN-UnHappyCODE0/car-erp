@@ -30,6 +30,9 @@ COPY --from=builder /app/main .
 # Copy thư mục database migrations sang runtime image
 COPY --from=builder /app/db/migration ./db/migration
 
+# Copy file .env nếu có từ builder sang runtime image (đồng bộ cơ chế với FE)
+COPY --from=builder /app/.env* ./
+
 EXPOSE 8080
 
 CMD ["./main"]
