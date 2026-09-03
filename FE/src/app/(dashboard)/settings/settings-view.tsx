@@ -15,6 +15,7 @@ import {
 import { Settings, Building2, User, ShieldCheck, Globe, Clock, CheckCircle2, Bug, Send, AlertCircle } from 'lucide-react';
 import * as Sentry from '@sentry/nextjs';
 import { Button } from '@/shared/components/ui/button';
+import { API_BASE_URL } from '@/shared/config/constants';
 
 export function SettingsView() {
   const { data: branches = [], isLoading } = useBranches();
@@ -65,10 +66,9 @@ export function SettingsView() {
   };
 
   const handleTestSentryBE = async () => {
-    setSentryBeStatus('Đang gọi API /api/v1/sentry-debug trên Backend...');
+    setSentryBeStatus('Đang gọi API Backend (/sentry-debug)...');
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-carerp.namhoanglegal.com/api/v1';
-      const res = await fetch(`${apiUrl}/sentry-debug`);
+      const res = await fetch(`${API_BASE_URL}/sentry-debug`);
       const data = await res.json();
       if (data.success) {
         setSentryBeStatus('✅ Backend phản hồi: Đã gửi 1 sự kiện lỗi lên Sentry Backend (car-erp-backend) thành công!');

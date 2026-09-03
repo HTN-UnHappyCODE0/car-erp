@@ -129,23 +129,28 @@ func (server *Server) setupRouter() {
 		rootAuth.POST("/renew", authHandler.RenewAccessToken)
 	}
 
+	// Sentry Debug & Verification endpoint (Hỗ trợ cả /sentry-debug và /api/v1/sentry-debug)
+	sentryDebugHandler := func(c *gin.Context) {
+		sentryutil.CaptureError(c.Request.Context(), fmt.Errorf("Test Sentry Error từ Car ERP Backend (Thử nghiệm thành công!)"), map[string]string{
+			"test":   "true",
+			"source": "sentry-debug-endpoint",
+		})
+		sentryutil.Flush(2 * time.Second)
+
+		c.JSON(http.StatusOK, gin.H{
+			"success":   true,
+			"message":   "Đã gửi 1 sự kiện lỗi thử nghiệm lên Sentry Backend thành công! Vui lòng kiểm tra tab Issues trên Sentry Dashboard.",
+			"timestamp": time.Now().Format(time.RFC3339),
+		})
+	}
+
+	server.router.GET("/sentry-debug", sentryDebugHandler)
+
 	// API V1 Routes
 	v1 := server.router.Group("/api/v1")
 	{
-		// Sentry Debug & Verification endpoint
-		v1.GET("/sentry-debug", func(c *gin.Context) {
-			sentryutil.CaptureError(c.Request.Context(), fmt.Errorf("Test Sentry Error từ Car ERP Backend (Thử nghiệm thành công!)"), map[string]string{
-				"test": "true",
-				"source": "sentry-debug-endpoint",
-			})
-			sentryutil.Flush(2 * time.Second)
-
-			c.JSON(http.StatusOK, gin.H{
-				"success": true,
-				"message": "Đã gửi 1 sự kiện lỗi thử nghiệm lên Sentry Backend thành công! Vui lòng kiểm tra tab Issues trên Sentry Dashboard.",
-				"timestamp": time.Now().Format(time.RFC3339),
-			})
-		})
+		// Sentry Debug endpoint
+		v1.GET("/sentry-debug", sentryDebugHandler)
 
 		// Public Auth Routes
 		authRoutes := v1.Group("/auth")
