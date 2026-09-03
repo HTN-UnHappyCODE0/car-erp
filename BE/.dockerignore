@@ -6,6 +6,4 @@
 *.log
 bin/
 server
-.env
-.env.*
 !.env.example

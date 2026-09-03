@@ -79,6 +79,9 @@ jobs:
             echo "[Deploy] Di chuyển vào thư mục dự án..."
             cd ~/car-erp
 
+            echo "[Deploy] Dọn sạch thay đổi tạm thời trên server..."
+            git checkout -- BE/Dockerfile || true
+
             echo "[Deploy] Pull mã nguồn mới nhất từ main..."
             git pull origin main
 
