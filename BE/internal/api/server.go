@@ -131,16 +131,40 @@ func (server *Server) setupRouter() {
 
 	// Sentry Debug & Verification endpoint (Hỗ trợ cả /sentry-debug và /api/v1/sentry-debug)
 	sentryDebugHandler := func(c *gin.Context) {
-		sentryutil.CaptureError(c.Request.Context(), fmt.Errorf("Test Sentry Error từ Car ERP Backend (Thử nghiệm thành công!)"), map[string]string{
+		configured, dsn := sentryutil.IsSentryConfigured()
+		if !configured {
+			c.JSON(http.StatusOK, gin.H{
+				"success":           false,
+				"sentry_configured": false,
+				"error":             "⚠️ SENTRY_DSN trên Backend đang bị TRỐNG hoặc chưa được kích hoạt! Hãy kiểm tra biến SENTRY_DSN trong file .env trên Server và chạy docker compose up -d backend.",
+				"timestamp":         time.Now().Format(time.RFC3339),
+			})
+			return
+		}
+
+		maskedDSN := dsn
+		if len(dsn) > 25 {
+			maskedDSN = dsn[:15] + "..." + dsn[len(dsn)-10:]
+		}
+
+		eventID := sentryutil.CaptureErrorWithEventID(c.Request.Context(), fmt.Errorf("Test Sentry Error từ Car ERP Backend (Thử nghiệm thành công!)"), map[string]string{
 			"test":   "true",
 			"source": "sentry-debug-endpoint",
 		})
 		sentryutil.Flush(2 * time.Second)
 
+		eventIDStr := ""
+		if eventID != nil {
+			eventIDStr = fmt.Sprintf("%s", *eventID)
+		}
+
 		c.JSON(http.StatusOK, gin.H{
-			"success":   true,
-			"message":   "Đã gửi 1 sự kiện lỗi thử nghiệm lên Sentry Backend thành công! Vui lòng kiểm tra tab Issues trên Sentry Dashboard.",
-			"timestamp": time.Now().Format(time.RFC3339),
+			"success":           true,
+			"sentry_configured": true,
+			"message":           "Đã gửi 1 sự kiện lỗi thử nghiệm lên Sentry Backend thành công! Vui lòng kiểm tra tab Issues trên Sentry Dashboard.",
+			"event_id":          eventIDStr,
+			"dsn_preview":       maskedDSN,
+			"timestamp":         time.Now().Format(time.RFC3339),
 		})
 	}
 

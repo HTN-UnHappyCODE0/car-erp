@@ -152,25 +152,45 @@ func enrichScopeWithAuthContext(scope *sentry.Scope, c *gin.Context) {
 	}
 }
 
+// IsSentryConfigured kiểm tra xem Sentry Go SDK đã được kết nối với DSN hợp lệ hay chưa
+func IsSentryConfigured() (bool, string) {
+	client := sentry.CurrentHub().Client()
+	if client == nil {
+		return false, ""
+	}
+	dsn := client.Options().Dsn
+	if strings.TrimSpace(dsn) == "" {
+		return false, ""
+	}
+	return true, dsn
+}
+
 // CaptureError ghi nhận thủ công một lỗi nghiệp vụ với ngữ cảnh chi tiết
 func CaptureError(ctx context.Context, err error, tags map[string]string) {
+	CaptureErrorWithEventID(ctx, err, tags)
+}
+
+// CaptureErrorWithEventID ghi nhận lỗi và trả về con trỏ EventID từ Sentry
+func CaptureErrorWithEventID(ctx context.Context, err error, tags map[string]string) *sentry.EventID {
 	if err == nil {
-		return
+		return nil
 	}
 	hub := sentry.GetHubFromContext(ctx)
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
-	if hub == nil {
-		return
+	if hub == nil || hub.Client() == nil {
+		return nil
 	}
 
+	var eventID *sentry.EventID
 	hub.WithScope(func(scope *sentry.Scope) {
 		for k, v := range tags {
 			scope.SetTag(k, v)
 		}
-		hub.CaptureException(err)
+		eventID = hub.CaptureException(err)
 	})
+	return eventID
 }
 
 // Flush đảm bảo toàn bộ event được gửi lên Sentry server trước khi tắt app

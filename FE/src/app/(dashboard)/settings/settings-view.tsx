@@ -71,9 +71,9 @@ export function SettingsView() {
       const res = await fetch(`${API_BASE_URL}/sentry-debug`);
       const data = await res.json();
       if (data.success) {
-        setSentryBeStatus('✅ Backend phản hồi: Đã gửi 1 sự kiện lỗi lên Sentry Backend (car-erp-backend) thành công!');
+        setSentryBeStatus(`✅ Backend Sentry OK! Mã Event ID: ${data.event_id || 'N/A'} (DSN: ${data.dsn_preview || 'OK'})`);
       } else {
-        setSentryBeStatus(`⚠️ Backend phản hồi: ${JSON.stringify(data)}`);
+        setSentryBeStatus(`⚠️ Backend phản hồi: ${data.error || JSON.stringify(data)}`);
       }
     } catch (err) {
       setSentryBeStatus(`❌ Không thể gọi backend: ${(err as Error).message}`);

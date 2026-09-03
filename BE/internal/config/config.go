@@ -85,7 +85,7 @@ func LoadConfig() *Config {
 			ConnectTimeout:    getEnvAsDuration("DB_CONNECT_TIMEOUT", 5*time.Second),
 		},
 		Sentry: SentryConfig{
-			DSN:              getEnv("SENTRY_DSN", ""),
+			DSN:              getEnv("SENTRY_DSN", getEnv("SENTRY_BACKEND_DSN", getEnv("NEXT_PUBLIC_SENTRY_DSN_BACKEND", ""))),
 			Environment:      getEnv("SENTRY_ENVIRONMENT", env),
 			TracesSampleRate: getEnvAsFloat64("SENTRY_TRACES_SAMPLE_RATE", 1.0),
 			AttachStacktrace: true,
